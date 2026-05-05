@@ -1,0 +1,37 @@
+
+steps:
+# 1. Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build', 
+    '-t', '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA', 
+    '.'
+    ]
+
+# 2. Push the container image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push', 
+    '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
+    ]
+
+# 3. Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: [
+    'run', 'deploy', '$_SERVICE_NAME',
+    '--image', '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA',
+    '--region', '$_DEPLOY_REGION',
+    '--platform', 'managed',
+    '--allow-unauthenticated'
+  ]
+
+# Store the image name for later use
+images:
+- '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
+
+# Substitution variables
+substitutions:
+  _SERVICE_NAME: 'ai-for-6g-app'
+  _DEPLOY_REGION: 'us-central1'
+  _GCR_HOSTNAME: 'us-central1-docker.pkg.dev'

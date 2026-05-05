@@ -1,0 +1,5 @@
+{
+  "name": "AI for 6G Experiential Learning Platform",
+  "description": "An immersive and practical learning application for an 'AI for 6G' workshop, focusing on Intelligent Reflecting Surfaces and Semantic Communication. The application features embedded, AI-generated learning content, interactive simulation tools, and 3D visualizations, all running in a self-contained web environment.",
+  "requestFramePermissions": []
+}

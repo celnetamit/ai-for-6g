@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI for 6G Learning Platform</title>
+    <meta name="description" content="AI for 6G Experiential Learning Platform - An immersive journey into the future of wireless communication and machine learning." />
+    <meta name="keywords" content="6G, AI, Machine Learning, Semantic Communication, Wireless, Future Tech" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="AI for 6G Learning Platform" />
+    <meta property="og:description" content="An immersive and practical learning application for the AI for 6G workshop." />
+    <meta property="og:image" content="/icons/icon-512x512.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="AI for 6G Learning Platform" />
+    <meta property="twitter:description" content="An immersive and practical learning application for the AI for 6G workshop." />
+    <meta property="twitter:image" content="/icons/icon-512x512.png" />
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0D6EFD">
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body class="bg-background-light dark:bg-background-dark">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+            console.log('SW unregistered');
+          }
+        });
+      }
+      // Clear caches
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+            for (let name of names) caches.delete(name);
+        });
+      }
+    </script>
+</body>
+</html>
