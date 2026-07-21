@@ -42,7 +42,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-surface-light dark:bg-surface-dark shadow-md sticky top-0 z-50">
+    <header className="glass-morphism sticky top-0 z-50 rounded-b-3xl mb-6 mx-2 mt-2">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">

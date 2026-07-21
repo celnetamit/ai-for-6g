@@ -10,7 +10,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 // FIX: Spread remaining props to the underlying div element.
 const Card: React.FC<CardProps> = ({ children, className = '', ...props }) => {
   return (
-    <div {...props} className={`bg-surface-light dark:bg-surface-dark rounded-lg shadow-md p-6 transition-colors duration-300 ${className}`}>
+    <div {...props} className={`glass-morphism rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${className}`}>
       {children}
     </div>
   );
