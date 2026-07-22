@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-const CENTRAL_AUTH_URL = "https://labs.celnet.in/api/auth/authorize-lab";
-const CENTRAL_LOGIN_URL = "https://labs.celnet.in/login";
+const CENTRAL_AUTH_URL = "https://live-labs.org/api/auth/authorize-lab";
+const CENTRAL_LOGIN_URL = "https://live-labs.org/login";
 const COOKIE_NAME = "__lab_auth_token";
 
 export const LabAuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
