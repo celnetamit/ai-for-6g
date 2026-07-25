@@ -101,5 +101,42 @@ export const LabAuthGuard: React.FC<{ children: React.ReactNode }> = ({ children
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <div 
+        style={{ 
+          position: 'fixed', 
+          bottom: '24px', 
+          left: '24px', 
+          zIndex: 999999 
+        }}
+      >
+        <a 
+          href="https://live-labs.org/labs" 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: '#0f172a',
+            color: 'white',
+            padding: '10px 16px',
+            borderRadius: '50px',
+            textDecoration: 'none',
+            fontSize: '14px',
+            fontWeight: '600',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            border: '1px solid #334155',
+            fontFamily: 'sans-serif',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back to Labs
+        </a>
+      </div>
+      {children}
+    </>
+  );
 };
