@@ -1,0 +1,22 @@
+# Without this file, `COPY . .` ships the host's node_modules and dist into the
+# build context. That is slow, bloats the image layer cache, and — worse — the
+# host's node_modules can shadow the ones installed inside the image, producing
+# builds that differ from CI for reasons that are very hard to see.
+node_modules
+dist
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+npm-debug.log*
+coverage
+tests
+*.md
+!README.md
+.vscode
+.idea
+.DS_Store
+Dockerfile
+.dockerignore
+cloudbuild.yaml

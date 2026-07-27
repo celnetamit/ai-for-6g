@@ -1,47 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>AI for 6G Learning Platform</title>
-    <meta name="description" content="AI for 6G Experiential Learning Platform - An immersive journey into the future of wireless communication and machine learning." />
-    <meta name="keywords" content="6G, AI, Machine Learning, Semantic Communication, Wireless, Future Tech" />
+    <meta
+      name="description"
+      content="AI for 6G Experiential Learning Platform - An immersive journey into the future of wireless communication and machine learning."
+    />
+    <meta
+      name="keywords"
+      content="6G, AI, Machine Learning, Semantic Communication, Wireless, Future Tech"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="AI for 6G Learning Platform" />
-    <meta property="og:description" content="An immersive and practical learning application for the AI for 6G workshop." />
+    <meta
+      property="og:description"
+      content="An immersive and practical learning application for the AI for 6G workshop."
+    />
     <meta property="og:image" content="/icons/icon-512x512.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content="AI for 6G Learning Platform" />
-    <meta property="twitter:description" content="An immersive and practical learning application for the AI for 6G workshop." />
+    <meta
+      property="twitter:description"
+      content="An immersive and practical learning application for the AI for 6G workshop."
+    />
     <meta property="twitter:image" content="/icons/icon-512x512.png" />
 
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0D6EFD">
-    <meta name="mobile-web-app-capable" content="yes">
-</head>
-<body class="bg-background-light dark:bg-background-dark">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0D6EFD" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!--
+      Applies the stored theme before first paint. The app defaults to dark, so
+      without this a light-theme user gets a dark flash on every navigation.
+    -->
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.unregister();
-            console.log('SW unregistered');
-          }
-        });
-      }
-      // Clear caches
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-            for (let name of names) caches.delete(name);
-        });
-      }
+      (function () {
+        try {
+          var stored = JSON.parse(localStorage.getItem('theme'));
+          var theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+          document.documentElement.classList.add(theme);
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
     </script>
-</body>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark">
+    <div id="root"></div>
+    <noscript>
+      <p style="font-family: sans-serif; padding: 2rem; text-align: center">
+        This learning platform requires JavaScript to run its interactive simulations.
+      </p>
+    </noscript>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

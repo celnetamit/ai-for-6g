@@ -1,25 +1,13 @@
 
+// Note: this file previously carried a `declare global { namespace JSX }` block
+// typing every three.js element as `any`. @react-three/fiber v9 supplies those
+// element types itself, so the augmentation only suppressed real type checking
+// inside the scene (and used the JSX namespace React 19 deprecates).
 import React, { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 // FIX: Import Line component from drei to avoid conflict with SVG line element
 import { OrbitControls, Text, Grid, Billboard, Line } from '@react-three/drei';
 import * as THREE from 'three';
-
-// Manually add Three.js elements to JSX.IntrinsicElements to satisfy TypeScript
-// without overwriting standard HTML elements like div, span, etc.
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      mesh: any;
-      boxGeometry: any;
-      meshStandardMaterial: any;
-      group: any;
-      ambientLight: any;
-      pointLight: any;
-      sphereGeometry: any;
-    }
-  }
-}
 
 const IRS_ELEMENT_COUNT = 10;
 const IRS_SIZE = 4;
@@ -38,7 +26,6 @@ const IrsElement: React.FC<{
     onClick: (details: { id: string, position: [number, number, number], phase: number }) => void;
 }> = ({ position, id, isSelected, onClick }) => {
     const meshRef = useRef<THREE.Mesh>(null!);
-    const color = useMemo(() => new THREE.Color(), []);
     const phaseRef = useRef(0);
 
     useFrame((state) => {

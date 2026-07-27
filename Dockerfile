@@ -1,30 +1,53 @@
-# Stage 1: Build the React application
-FROM node:20-slim AS build
+# syntax=docker/dockerfile:1
+
+# ---------------------------------------------------------------------------
+# Stage 1 — build
+# ---------------------------------------------------------------------------
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install
+# Copy only the manifests first so the dependency layer is reused whenever
+# application source changes but dependencies do not.
+COPY package.json package-lock.json ./
 
-# Copy the rest of the application code
+# `npm ci` rather than `npm install`: it installs exactly the lockfile, fails if
+# the lockfile and package.json disagree, and is reproducible. `npm install`
+# could silently resolve different versions than CI or a teammate.
+RUN npm ci
+
 COPY . .
 
-# Build the application
-RUN npm run build && ls -la dist && ls -la dist/assets
+# Typecheck as part of the image build, so a type error fails the deploy rather
+# than shipping broken code.
+RUN npm run typecheck && npm run build:only
 
-# Stage 2: Serve the application with Nginx
-FROM nginx:alpine
+# ---------------------------------------------------------------------------
+# Stage 2 — serve
+# ---------------------------------------------------------------------------
+FROM nginx:alpine AS runtime
 
-# Copy the build output from the previous stage
-COPY --from=build /app/dist /usr/share/nginx/html
-RUN chmod -R 755 /usr/share/nginx/html
+# Drop the packaged default site so it cannot shadow ours.
+RUN rm -f /etc/nginx/conf.d/default.conf
 
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf                    /etc/nginx/conf.d/default.conf
+COPY nginx-security-headers.conf   /etc/nginx/conf.d/security-headers.conf
+COPY --from=build /app/dist        /usr/share/nginx/html
 
-# Expose port 3000
+# Read-only for the web server; it never needs to write into the document root.
+RUN chmod -R a-w /usr/share/nginx/html \
+ && chown -R nginx:nginx /usr/share/nginx/html
+
+# Run unprivileged. The image binds port 3000, which is above 1024, so no
+# capability to bind low ports is required.
+RUN touch /var/run/nginx.pid \
+ && chown -R nginx:nginx /var/run/nginx.pid /var/cache/nginx /var/log/nginx
+
+USER nginx
+
 EXPOSE 3000
 
-# Start Nginx
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/healthz || exit 1
+
 CMD ["nginx", "-g", "daemon off;"]

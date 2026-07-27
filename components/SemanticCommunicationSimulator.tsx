@@ -11,27 +11,55 @@ const imageSources: Record<string, string> = {
     car: CAR_IMAGE_B64
 };
 
+const CANVAS_SIZE = 64;
+
 const SemanticCommunicationSimulator: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<keyof typeof imageSources>('cat');
   const [noiseLevel, setNoiseLevel] = useState(20);
+  const [isImageReady, setIsImageReady] = useState(false);
 
   const traditionalCanvasRef = useRef<HTMLCanvasElement>(null);
   const semanticCanvasRef = useRef<HTMLCanvasElement>(null);
-  const imageRef = useRef<HTMLImageElement>(new Image());
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
+  /*
+   * Load the selected image.
+   *
+   * The previous version assigned `img.src` and only then attached `onload`.
+   * For a data: URI the browser can complete the load synchronously, so the
+   * handler was attached after the event had already fired and the canvases
+   * stayed blank. It also reused one long-lived Image across selections, so a
+   * late `onload` from the previous image could repaint the new one.
+   */
   useEffect(() => {
-    const img = imageRef.current;
-    img.src = imageSources[selectedImage];
+    const img = new Image();
+    let cancelled = false;
+
+    setIsImageReady(false);
     img.onload = () => {
-        applyNoise();
+      if (cancelled) return;
+      imageRef.current = img;
+      setIsImageReady(true);
+    };
+    img.onerror = () => {
+      if (!cancelled) setIsImageReady(false);
+    };
+    // Handler first, source second.
+    img.src = imageSources[selectedImage] as string;
+
+    return () => {
+      cancelled = true;
+      img.onload = null;
+      img.onerror = null;
     };
   }, [selectedImage]);
 
+  // Redraw whenever the image or the noise level changes. Driving this from an
+  // effect (rather than calling applyNoise from inside onload) removes the stale
+  // closure that captured the noise level from an earlier render.
   useEffect(() => {
-      if(imageRef.current.complete) {
-        applyNoise();
-      }
-  }, [noiseLevel]);
+    if (isImageReady) applyNoise();
+  });
 
   const applyNoise = () => {
     const traditionalCtx = traditionalCanvasRef.current?.getContext('2d');
@@ -39,7 +67,11 @@ const SemanticCommunicationSimulator: React.FC = () => {
     if (!traditionalCtx || !semanticCtx) return;
 
     const img = imageRef.current;
-    const { width, height } = img;
+    if (!img) return;
+    // The canvases are a fixed 64x64; using the image's intrinsic size here
+    // would clip or under-fill them if the asset dimensions ever change.
+    const width = CANVAS_SIZE;
+    const height = CANVAS_SIZE;
 
     // Draw original image on both
     traditionalCtx.drawImage(img, 0, 0, width, height);
@@ -96,14 +128,14 @@ const SemanticCommunicationSimulator: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h4 className="font-semibold text-lg mb-2 text-center">Traditional Transmission</h4>
-          <canvas ref={traditionalCanvasRef} width={64} height={64} className="w-full h-auto border-2 border-gray-300 dark:border-gray-600 rounded-md" style={{ imageRendering: 'pixelated' }}></canvas>
+          <canvas ref={traditionalCanvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} className="w-full h-auto border-2 border-gray-300 dark:border-gray-600 rounded-md" style={{ imageRendering: 'pixelated' }}></canvas>
           <div className="mt-2 text-center">
             <p>Bit Error Rate: <span className="font-bold text-red-500">{bitErrorRate.toFixed(1)}%</span></p>
           </div>
         </div>
         <div>
           <h4 className="font-semibold text-lg mb-2 text-center">Semantic Transmission</h4>
-          <canvas ref={semanticCanvasRef} width={64} height={64} className="w-full h-auto border-2 border-gray-300 dark:border-gray-600 rounded-md" style={{ imageRendering: 'pixelated' }}></canvas>
+          <canvas ref={semanticCanvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} className="w-full h-auto border-2 border-gray-300 dark:border-gray-600 rounded-md" style={{ imageRendering: 'pixelated' }}></canvas>
           <div className="mt-2 text-center">
             <p>Object Recognition Confidence: <span className="font-bold text-green-500">{objectRecognitionConfidence.toFixed(1)}%</span></p>
           </div>

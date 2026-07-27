@@ -1,62 +1,76 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useState, useEffect } from 'react';
+type SetValue<T> = (value: T | ((previous: T) => T)) => void;
 
-// FIX: Removed trailing comma from <T,> to <T> as this is a function declaration, not an arrow function.
-function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
+/**
+ * State backed by `localStorage`, synchronised across tabs.
+ *
+ * Three properties matter and each fixes a defect in the previous version:
+ *
+ *  1. **The setter is referentially stable.** It was recreated on every render,
+ *     so every `useCallback` in AuthContext / ThemeContext / ProgressContext that
+ *     listed it as a dependency was invalidated on every render too. That made
+ *     the context values change identity constantly and defeated memoisation
+ *     across the whole tree.
+ *  2. **Updates read the latest state.** The old setter closed over
+ *     `storedValue`, so two updates in the same tick silently lost the first.
+ *  3. **Cross-tab sync uses the current initial value**, held in a ref, instead
+ *     of a value captured on first render.
+ */
+function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
+  const initialRef = useRef(initialValue);
+  initialRef.current = initialValue;
+
+  const read = useCallback((): T => {
+    if (typeof window === 'undefined') return initialRef.current;
     try {
       const item = window.localStorage.getItem(key);
-      if (item === null) return initialValue;
-      try {
-        return JSON.parse(item);
-      } catch {
-        return item as unknown as T;
-      }
-    } catch (error) {
-      console.error('Error reading from localStorage', error);
-      return initialValue;
+      if (item === null) return initialRef.current;
+      return JSON.parse(item) as T;
+    } catch {
+      // Corrupt or non-JSON entry (or storage blocked). Fall back rather than
+      // crashing the provider that owns this key.
+      return initialRef.current;
     }
-  });
+  }, [key]);
 
-  // FIX: Correctly type the `value` parameter to allow for functional updates.
-  const setValue = (value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+  const [storedValue, setStoredValue] = useState<T>(read);
+
+  // Mirrors state so the setter can resolve functional updates without listing
+  // `storedValue` as a dependency, which is what keeps its identity stable.
+  const valueRef = useRef(storedValue);
+  valueRef.current = storedValue;
+
+  const setValue = useCallback<SetValue<T>>(
+    (value) => {
+      const next = value instanceof Function ? value(valueRef.current) : value;
+      valueRef.current = next;
+      setStoredValue(next);
+      try {
+        window.localStorage.setItem(key, JSON.stringify(next));
+      } catch {
+        // Quota exceeded or private mode: keep the in-memory value working.
       }
-    } catch (error) {
-      console.error('Error writing to localStorage', error);
-    }
-  };
+    },
+    [key],
+  );
+
+  // Re-read when the key changes, so a remounted hook does not keep stale data.
+  useEffect(() => {
+    setStoredValue(read());
+  }, [read]);
 
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === key) {
-        try {
-            if (e.newValue) {
-                try {
-                    setStoredValue(JSON.parse(e.newValue));
-                } catch {
-                    setStoredValue(e.newValue as unknown as T);
-                }
-            } else {
-                setStoredValue(initialValue);
-            }
-        } catch(error) {
-            console.error('Error parsing storage change', error)
-        }
-      }
+    const onStorage = (event: StorageEvent) => {
+      // `key === null` means the whole store was cleared.
+      if (event.key !== null && event.key !== key) return;
+      if (event.storageArea && event.storageArea !== window.localStorage) return;
+      setStoredValue(read());
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [key, read]);
 
   return [storedValue, setValue];
 }

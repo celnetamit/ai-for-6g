@@ -1,7 +1,6 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Card from './ui/Card';
-import Button from './ui/Button';
 
 const JSCCSimulator: React.FC = () => {
     const [noiseLevel, setNoiseLevel] = useState(10);

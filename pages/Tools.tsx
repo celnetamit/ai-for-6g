@@ -2,7 +2,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Card from '../components/ui/Card';
-import ThreeScene from '../components/ThreeScene';
+import LazyThreeScene from '../components/LazyThreeScene';
 import SemanticCommunicationSimulator from '../components/SemanticCommunicationSimulator';
 import AutoencoderVisualizer from '../components/AutoencoderVisualizer';
 import JSCCSimulator from '../components/JSCCSimulator';
@@ -97,7 +97,7 @@ const Tools: React.FC = () => {
                 <p className="mb-4 text-secondary dark:text-gray-400">
                     This is a 3D representation of an IRS-assisted communication link. Click on elements to see their phase shifts. You can rotate, pan, and zoom the scene.
                 </p>
-                <ThreeScene />
+                <LazyThreeScene />
             </Card>
         </div>
       </section>

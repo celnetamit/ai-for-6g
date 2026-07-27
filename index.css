@@ -1,9 +1,32 @@
 
 @import "tailwindcss";
+
+/*
+ * Lesson content and the legal pages render markdown inside `prose` containers.
+ * Without this plugin those classes match nothing, so headings, lists and
+ * paragraph spacing all collapse into a wall of unstyled text — which is most of
+ * what this platform actually displays.
+ */
+@plugin "@tailwindcss/typography";
+
 @source "./components";
 @source "./pages";
 @source "./context";
 @source "./App.tsx";
+
+/*
+ * Class-based dark mode.
+ *
+ * Tailwind v4 no longer reads `darkMode: 'class'` from tailwind.config.js — the
+ * variant is defined here or not at all. Without this line every `dark:` utility
+ * compiles into `@media (prefers-color-scheme: dark)`, so the theme toggle
+ * (which sets `.dark` on <html>) changes nothing and the app silently follows
+ * the operating system instead.
+ *
+ * `:where()` keeps specificity at zero so `dark:` utilities stay as easy to
+ * override as their light counterparts.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-primary: #0D6EFD;
@@ -17,29 +40,41 @@
   --color-on-surface-light: #212529;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/*
+ * NOTE: a `* { margin: 0; padding: 0; box-sizing: border-box }` reset used to
+ * sit here, unlayered.
+ *
+ * Cascade layers make unlayered rules beat EVERY layered rule regardless of
+ * specificity. Tailwind puts its utilities — including the typography plugin's
+ * `.prose` styles — in `@layer utilities`, so that one reset silently zeroed the
+ * margins on every heading, paragraph and list in the lesson and legal content.
+ * Tailwind's own preflight (in `@layer base`) already applies exactly the same
+ * reset, so the rule was redundant as well as harmful.
+ *
+ * Everything below is deliberately placed in a layer for the same reason.
+ */
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 }
 
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+@layer components {
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
 
-.glass-morphism {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.dark .glass-morphism {
-  background: rgba(30, 30, 30, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  .dark .glass-morphism {
+    background: rgba(30, 30, 30, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
 /* Custom scrollbar */
