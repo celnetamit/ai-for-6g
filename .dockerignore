@@ -11,7 +11,11 @@ dist
 !.env.example
 npm-debug.log*
 coverage
-tests
+# `tests` is deliberately NOT excluded: the build stage runs `npm run verify`,
+# which runs the suite. Excluding it made vitest exit 1 with "No test files
+# found", so the image could never be gated on the tests at all.
+# The runtime stage copies only `dist`, so nothing here reaches the image.
+dist-smoke
 *.md
 !README.md
 .vscode

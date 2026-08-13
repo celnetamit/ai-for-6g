@@ -20,7 +20,11 @@ COPY . .
 
 # Typecheck as part of the image build, so a type error fails the deploy rather
 # than shipping broken code.
-RUN npm run typecheck && npm run build:only
+# `verify` rather than typecheck+build: it also runs the test suite, which is
+# what asserts the channel mathematics against published reference values.
+# Those tests are the only thing standing between an arithmetic regression
+# and a workshop full of students copying wrong numbers into their notes.
+RUN npm run verify
 
 # ---------------------------------------------------------------------------
 # Stage 2 — serve
