@@ -1,8 +1,27 @@
-# AI for 6G — Experiential Learning Platform
+# AI for 6G — Virtual Live Lab
 
-An interactive workshop application covering Intelligent Reflecting Surfaces and
-Semantic Communication. It ships embedded lesson content, browser-based simulators
-(canvas and WebGL), assessments, and progress tracking that persists locally.
+**AI for 6G: Intelligent Communication Networks, Semantic Connectivity &
+Autonomous Wireless Systems Lab.**
+
+A virtual research environment in which a learner configures, simulates and
+optimises next-generation communication systems. Five knowledge modules, three
+learning levels, six experiments, three trained neural models, three generated
+datasets and a research-report generator.
+
+The organising principle is that **nothing is asserted that could be measured**:
+
+- bit error rates are *counted* over generated noise, not read off a curve, and
+  the closed-form curve is plotted beside the count so the two can be compared;
+- the gain of a reflecting surface is the magnitude of a complex sum, `|h_d + Σ
+  βe^{jθ}h_r h_t|²`, not a fitted line;
+- the three DeepJSCC architectures were really trained, offline, by a script in
+  this repository, and ship with model cards whose numbers a test re-verifies
+  against the shipped weights;
+- everything the models leave out is printed on the screen that shows their
+  output and in the header of every export.
+
+Nothing here is a measurement of a deployed network, and none of it has been
+validated against hardware. Every results screen says so.
 
 ---
 
@@ -29,25 +48,100 @@ production builds**.
 | `npm test` | Vitest suite |
 | `npm run build` | Typecheck, then production build to `dist/` |
 | `npm run verify` | Typecheck + tests + build — run before pushing |
+| `npm run train` | Retrain the three DeepJSCC models and rewrite their weights and cards |
 | `npm run docker:build` / `docker:run` | Build and run the production image |
+
+`npm run train` takes about twenty minutes and is only needed when an
+architecture or the data generator changes. Its output is committed — the
+browser never trains. After running it, `npm test` re-verifies that each model
+card matches the weights it describes; a card that has drifted fails there
+rather than misleading a reader.
 
 ---
 
 ## Architecture
 
 ```
-index.tsx          Bootstrap: error boundary → lab auth gate → App
-App.tsx            Providers + HashRouter; every page is lazy-loaded
-context/           Theme · Auth · Progress (all localStorage-backed)
-hooks/             useLocalStorage — stable setter, cross-tab sync
-lib/               random (Fisher–Yates) · quiz · registerServiceWorker
-components/        UI primitives, simulators, LazyThreeScene
-pages/             One module per route, code-split
-data/content.ts    All lesson, glossary and assessment content
-public/            manifest, icons, service-worker.js
-nginx.conf         Production server config
-nginx-security-headers.conf   Shared headers, included per location
+index.tsx              Bootstrap: error boundary → lab auth gate → App
+App.tsx                Providers + HashRouter; every page is lazy-loaded
+context/               Theme · Auth · Progress · Lab (all localStorage-backed)
+hooks/                 useLocalStorage — stable setter, cross-tab sync
+
+lib/                   THE SIMULATION ENGINE — pure, seeded, unit-tested
+  complex.ts           Complex arithmetic for the baseband model
+  channel.ts           Link budget: FSPL, thermal noise, Shannon capacity
+  modulation.ts        Gray-coded QAM, ML detection, link adaptation, EVM
+  signalModel.ts       Y = HX + N; Rician block fading; counted BER/BLER
+  irs.ts               y = (h_rᵀ Φ h_t + h_d)x + n; phase quantisation
+  optimizers.ts        Random · greedy · REINFORCE · cross-entropy · closed form
+  performance.ts       Throughput, HARQ latency, energy efficiency, grading
+  sources.ts           Procedural 16×16 scene generator (Node and browser)
+  classical.ts         DCT + quantisation + coded transmission baseline
+  semantic.ts          Runs both systems over one channel and measures them
+  experiment.ts        The §4 workflow as one async function
+  advisor.ts           Parameter suggestions, each one evaluated
+  report.ts            Research report; no language model contributes to it
+  datasets.ts          The three demo datasets and their exports
+  nn/                  autograd · layers · the three JSCC architectures
+  models/weights/      Trained int8 weights + model cards (generated)
+
+services/              aiClient.ts (gateway transport) · copilot.ts
+scripts/train-models.ts  Offline training; writes lib/models/weights/
+components/lab/        Parameter panel, result dashboard, charts, Copilot
+pages/                 One module per route, code-split
+data/knowledge.ts      The five knowledge-bank modules, written per level
+data/content.ts        Lessons, glossary, assessments, legal copy
+public/                manifest, icons, service-worker.js
+nginx.conf             Production server config
 ```
+
+### The engine
+
+| Quantity | How it is obtained |
+| --- | --- |
+| Bit error rate | Counted over generated symbols through a generated channel |
+| Block error rate | Counted per block under block fading |
+| EVM | RMS error vector of the equalised symbols |
+| SNR with a surface | `\|h_d + Σ βe^{jθ_n} h_{r,n} h_{t,n}\|²·P/N₀` |
+| Throughput | Highest sustainable MCS, less 14% overhead and block errors |
+| Latency | Alignment + time on air + propagation + processing + HARQ |
+| Energy efficiency | Goodput / (P_tx/η + baseband + per-element control) |
+| Reconstruction quality | PSNR, SSIM and a task-weighted PSNR against the source |
+
+Every one of those is checked somewhere in `tests/`: the measured BER against
+the closed-form curve, the N² scaling law against 6.02 dB per doubling, the
+phase-quantisation loss against `(2^b/π·sin(π/2^b))²`, and every gradient in the
+autodiff engine against finite differences.
+
+### The AI models
+
+Three DeepJSCC architectures — convolutional, single-block self-attention, and
+fully connected — trained identically on the same generated scenes at the same
+bandwidth ratios, so the comparison isolates the architecture. They are
+rate-adaptive: the cut point is drawn during training, so puncturing the latent
+at inference is a supported operation rather than an out-of-distribution one.
+
+Weights ship as int8; the cost of that quantisation is *measured* on the
+held-out set and recorded on each card, and float32 is used instead if it ever
+exceeds 0.25 dB.
+
+Reinforcement learning appears where it belongs: configuring the surface from
+reward alone. REINFORCE uses a factored categorical policy over the phases the
+hardware can actually set — a continuous Gaussian policy over 64 dimensions was
+measurably worse than random search, and the comment in `lib/optimizers.ts`
+records that measurement.
+
+### The Copilot
+
+`services/copilot.ts`. One transport, a server-side gateway, configured by
+`VITE_LLM_PROXY_URL`. No vendor SDK is bundled and no key is read into the
+client, because anything a `VITE_` variable holds is published.
+
+It is never asked to compute anything: every figure it can see was produced by
+the engine and handed to it as context, and a numeric audit flags any figure in
+a reply that does not appear there. With no gateway configured the assistant is
+**absent rather than simulated** — the panel shows the engine's own reading of
+its own numbers, labelled as such.
 
 ### Performance notes
 

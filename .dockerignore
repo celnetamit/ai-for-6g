@@ -16,6 +16,10 @@ coverage
 # found", so the image could never be gated on the tests at all.
 # The runtime stage copies only `dist`, so nothing here reaches the image.
 dist-smoke
+# `dist-verify` is a second build made with the lab auth gate disabled, so the
+# production bundle can be driven in a headless browser. It is 13 MB and must
+# never enter the build context or the image.
+dist-verify
 *.md
 !README.md
 .vscode

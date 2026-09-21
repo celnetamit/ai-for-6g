@@ -1,5 +1,5 @@
 {
-  "name": "ai-for-6g-experiential-learning-platform",
+  "name": "ai-for-6g-virtual-live-lab",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "train": "vite-node scripts/train-models.ts",
     "build": "npm run typecheck && vite build",
     "build:only": "vite build",
     "preview": "vite preview",
@@ -41,6 +42,7 @@
     "tailwindcss": "^4.2.2",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
+    "vite-node": "^3.2.4",
     "vitest": "^3.2.7"
   }
 }

@@ -2,12 +2,12 @@
 import { AppContent } from '../types';
 
 export const content: AppContent = {
-  workshopTitle: "AI for 6G: Intelligent Reflecting Surfaces & Semantic Communication",
+  workshopTitle: "AI for 6G: Intelligent Communication Networks, Semantic Connectivity & Autonomous Wireless Systems Lab",
   lastReviewed: "2024-07-28T10:00:00Z",
   learningMaterials: [
     {
       id: "module-1",
-      title: "Module 1: Intelligent Reflecting Surfaces (IRS)",
+      title: "Course unit 1: Intelligent Reflecting Surfaces (IRS)",
       description: "Modeling the channel with an IRS and using deep reinforcement learning to configure the phase shifts of the IRS elements to maximize SNR at the receiver.",
       lessons: [
         {
@@ -31,8 +31,9 @@ By intelligently coordinating the phase shifts of all elements, an IRS can colla
 
 An IRS itself does not transmit or receive signals; it only reflects them passively. This makes it extremely energy-efficient. The 'intelligence' comes from a smart controller, which dynamically adjusts the phase shifts of the IRS elements based on the channel state information (CSI) and communication requirements.
 
-![IRS Diagram](https://picsum.photos/600/300?random=1)
-*Conceptual diagram of an IRS-assisted communication system.*
+> **See it working:** the *Rescuing a blocked link with an IRS* experiment draws
+> the element sweep for a surface you configure, and the Tools page has a 3D view
+> of an IRS-assisted link whose per-element phases you can inspect.
 
 The core challenge lies in finding the optimal phase shifts for hundreds or thousands of elements in real-time. This is a high-dimensional optimization problem where traditional methods fall short. This is where AI, specifically **Deep Reinforcement Learning (DRL)**, comes into play. A DRL agent can learn an optimal policy to configure the IRS phase shifts to maximize a long-term reward, such as the achievable data rate or SNR.
 `
@@ -74,7 +75,7 @@ In our interactive tool, you will simulate a simplified version of this system. 
     },
     {
       id: "module-2",
-      title: "Module 2: Semantic Communication Systems",
+      title: "Course unit 2: Semantic Communication Systems",
       description: "Moving beyond bit-level transmission. Designing an autoencoder architecture where the transmitter extracts semantic features and the receiver reconstructs the meaning.",
       lessons: [
         {
@@ -93,8 +94,9 @@ However, with the rise of AI and machine-to-machine communication, this paradigm
 
 The core idea is to leverage the knowledge shared between the transmitter and receiver. For example, if we want to transmit an image of a 'cat', a traditional system would encode all the pixels. A semantic system would extract the key features that define a 'cat' (e.g., pointy ears, whiskers, feline shape) and transmit only this compact representation. The receiver, having prior knowledge of what cats look like, can then reconstruct a plausible image of a cat.
 
-![Semantic Communication](https://picsum.photos/600/300?random=2)
-*Traditional vs. Semantic Communication.*
+> **See it working:** the *Semantic versus bit-level transmission* experiment
+> sends one scene both ways over the same channel and measures what each
+> receiver reconstructed.
 
 ## Advantages
 
@@ -119,8 +121,9 @@ An autoencoder consists of two main parts:
 
 The network is trained by minimizing the **reconstruction error**—the difference between the original input and the reconstructed output. By forcing the data to pass through the lower-dimensional 'bottleneck' of the latent space, the network must learn to capture the most salient features.
 
-![Autoencoder](https://picsum.photos/600/300?random=3)
-*A simple autoencoder architecture.*
+> **See it working:** the AI model engine shows the encoder, the channel and the
+> decoder for each trained architecture, and lets you push one scene through at
+> an SNR of your choosing.
 
 ## Application in Semantic Communication
 
@@ -135,7 +138,7 @@ You can experiment with a simplified version of this in our **Autoencoder Visual
     },
     {
         id: "module-3",
-        title: "Module 3: Joint Source-Channel Coding with AI",
+        title: "Course unit 3: Joint Source-Channel Coding with AI",
         description: "Designing an end-to-end neural network that replaces traditional separate source and channel coding, optimizing for a specific task fidelity under channel constraints.",
         lessons: [
             {
@@ -208,7 +211,25 @@ You can see this in action in our **JSCC Simulator** tool.
       { term: "SNR (Signal-to-Noise Ratio)", definition: "A measure used in science and engineering that compares the level of a desired signal to the level of background noise. It is often expressed in decibels (dB).", category: "Core Concepts" },
       { term: "Beamforming", definition: "A signal processing technique used to control the directionality of the transmission or reception of radio signals. In IRS, it's achieved by adjusting phase shifts.", category: "Wireless Technologies" },
       { term: "JSCC (Joint Source-Channel Coding)", definition: "An approach where source coding (compression) and channel coding (error correction) are designed together in a single step, often using end-to-end deep learning.", category: "Core Concepts" },
-      { term: "Latent Space", definition: "In an autoencoder, the lower-dimensional space that contains the compressed representation of the input data. This space captures the most salient, semantic features.", category: "AI Methods" }
+      { term: "Latent Space", definition: "In an autoencoder, the lower-dimensional space that contains the compressed representation of the input data. This space captures the most salient, semantic features.", category: "AI Methods" },
+      { term: "Rician K-factor", definition: "The ratio of power in the direct, specular path to power in the scattered paths, in dB. A high K means mild fading; K = 0 (a vanishing specular term) is Rayleigh fading, where deep fades are common.", category: "Core Concepts" },
+      { term: "Rayleigh fading", definition: "The amplitude distribution of a channel made entirely of scattered paths, with no line of sight. It is the case an IRS exists to rescue, because its deep fades dominate the average error rate.", category: "Core Concepts" },
+      { term: "Path loss", definition: "The drop in signal power with distance. Free-space loss is 20·log10(4\u03c0d/\u03bb), which carries a frequency term \u2014 moving from 3.5 GHz to 28 GHz costs 18 dB over the same distance.", category: "Core Concepts" },
+      { term: "EVM (Error Vector Magnitude)", definition: "The RMS distance between the received symbols and the ideal constellation points, relative to the reference amplitude. The signal-quality figure a spectrum analyser displays.", category: "Core Concepts" },
+      { term: "BLER (Block Error Rate)", definition: "The fraction of transport blocks containing at least one bit error. It drives retransmissions, and therefore latency, far more directly than the raw bit error rate does.", category: "Core Concepts" },
+      { term: "HARQ", definition: "Hybrid automatic repeat request: the retransmission scheme that turns block errors into delay rather than loss. A packet allowed K attempts at block error rate p needs (1\u2212p^K)/(1\u2212p) transmissions on average.", category: "Wireless Technologies" },
+      { term: "MCS (Modulation and Coding Scheme)", definition: "The pairing of a constellation with a code rate. Link adaptation selects the highest scheme the current SNR sustains \u2014 which is why a link that loses 6 dB does not get noisier, it gets slower.", category: "Wireless Technologies" },
+      { term: "Goodput", definition: "The rate an application actually receives, after physical-layer overhead and after blocks lost to errors. Always below the raw rate, and well below the Shannon bound.", category: "Core Concepts" },
+      { term: "Energy efficiency", definition: "Bits delivered per joule consumed. The total includes the amplifier (transmit power divided by its efficiency), the baseband circuitry, and the per-element control power of any reflecting surface.", category: "Core Concepts" },
+      { term: "Bandwidth ratio (\u03c1)", definition: "Channel uses per source symbol in a joint source-channel code. The compression setting of a DeepJSCC system: \u03c1 = 1/8 means one complex symbol transmitted for every eight source pixels.", category: "AI Methods" },
+      { term: "Cliff effect", definition: "The behaviour of a separation-based system at its threshold: excellent above it, nothing at all below it, with about a decibel in between. It is what a block code does when it runs out of correction capability, not a flaw in an implementation.", category: "Core Concepts" },
+      { term: "Graceful degradation", definition: "Reconstruction quality that falls smoothly as the channel worsens, with no threshold. The headline property of DeepJSCC, and the reason it is worth bandwidth when the channel is not known in advance.", category: "AI Methods" },
+      { term: "REINFORCE", definition: "A policy-gradient reinforcement learning algorithm (Williams, 1992) that updates a policy using the score-function gradient weighted by reward. The baseline subtraction is not optional \u2014 without it the policy chases the average reward rather than what beat it.", category: "AI Methods" },
+      { term: "Cross-entropy method", definition: "Derivative-free policy search: sample a population, keep the best fraction, refit the sampling distribution to them, repeat. Robust where a gradient estimate is too noisy to follow.", category: "AI Methods" },
+      { term: "Phase quantisation loss", definition: "The array gain given up because a surface can only set 2^b phases. (2^b/\u03c0 \u00b7 sin(\u03c0/2^b))\u00b2 \u2014 3.9 dB at one bit, 0.9 dB at two, 0.2 dB at three.", category: "Wireless Technologies" },
+      { term: "Jain fairness index", definition: "(\u03a3x)\u00b2/(n\u00b7\u03a3x\u00b2) over the per-user rates. 1 when every user gets the same rate, 1/n when one user gets everything. Reported next to sum rate because the two disagree.", category: "Core Concepts" },
+      { term: "Semantic importance", definition: "A weighting that says which part of the content matters. Applied here both to the score (the object weighted above the background) and to the transmission (bits shifted onto the coefficients that carry structure).", category: "Core Concepts" },
+      { term: "Model card", definition: "The record that makes a trained model's numbers meaningful: its training data and seeds, its optimiser and schedule, its measured performance on held-out data, and what it cannot do.", category: "AI Methods" }
     ],
     faqs: [
       {
@@ -221,29 +242,45 @@ You can see this in action in our **JSCC Simulator** tool.
       },
       {
         question: "How is my progress saved?",
-        answer: "Your progress, including completed lessons and assessment scores, is saved automatically in your browser's local storage. This means you can pick up where you left off on the same device and browser."
+        answer: "Progress, experiment history and saved projects are written to this browser's local storage. Nothing is uploaded, which also means nothing follows you to another device and clearing site data deletes it. Download a report for anything you need to keep."
+      },
+      {
+        question: "Are these results real measurements?",
+        answer: "No. Every figure in this lab is produced by its own simulation engine from the parameters you set, using educational models \u2014 free-space path loss, Rician block fading, Gray-coded QAM, the IRS cascade, and three DeepJSCC networks trained on procedurally generated scenes. Nothing here has been validated against a physical network, and every results screen says so."
+      },
+      {
+        question: "Where do the AI models come from?",
+        answer: "They were trained offline by scripts/train-models.ts on data this repository generates, and they ship as quantised weights with model cards recording the seeds, the schedule, the held-out performance and the limitations. The browser only runs inference. A test re-runs each card's evaluation against the shipped weights, so a card that disagrees with its model fails the build."
+      },
+      {
+        question: "What is the 6G Network Copilot allowed to do?",
+        answer: "It explains results the engine has already computed. It is never asked to calculate anything, and every figure in a reply that does not appear in the supplied results is flagged for you to check. Where no language-model gateway is configured, the assistant is absent and the panel shows the engine's own reading of the numbers instead \u2014 it is not simulated."
+      },
+      {
+        question: "Can I reproduce a result?",
+        answer: "Yes, exactly. Every run is determined by its configuration and its random seed, both of which appear in the report and in the history entry. Re-entering them reproduces every number."
       }
     ]
   },
   aboutPageContent: {
-    analysisSummary: "This application provides a comprehensive, hands-on learning experience for the 'AI for 6G' workshop. It is designed as a self-contained, high-performance web platform that embeds all learning content directly within the application, eliminating the need for external data fetching at runtime. This approach ensures reliability, speed, and a seamless offline experience.",
-    mission: "Our mission is to demystify the core enabling technologies of 6G by providing an immersive and practical learning environment. We bridge the gap between theory and practice with interactive simulations and visualizations, allowing participants to not just read about, but actively experiment with, the future of wireless communication.",
+    analysisSummary: "A virtual research environment for next-generation communication systems. The lab is built around one principle: nothing is asserted that could be measured. Bit error rates are counted over generated noise rather than read from a curve, the gain of a reflecting surface is the magnitude of a complex sum rather than a fitted line, and the three neural models were genuinely trained offline and ship with the held-out measurements that justify them. Everything the models cannot do is stated on the screen that shows their output.",
+    mission: "To let a learner disagree with a result and then check it. Every experiment is reproducible from its configuration and seed, every equation on screen is implemented in code the learner can read, and every claim the lab makes about its own accuracy is backed by a test that compares a measurement against a closed-form reference. A simulator that cannot be argued with teaches trust rather than engineering.",
     keyFeatures: [
       {
-        title: "Embedded Content Model",
-        description: "All workshop content is pre-generated and embedded within the application, ensuring instant access and full offline functionality."
+        title: "A real simulation engine",
+        description: "Free-space path loss with a frequency term, Rician block fading, Gray-coded QAM with maximum-likelihood detection, the IRS cascade y = (h_r\u1d40 \u03a6 h_t)x + n, Shannon capacity, HARQ latency and a published energy model. Unit-tested against closed-form references \u2014 the measured bit error rate is checked to agree with the textbook curve."
       },
       {
-        title: "Interactive Simulators",
-        description: "Engage with complex concepts like IRS beamforming and semantic communication through hands-on, real-time simulation tools."
+        title: "Neural models that were actually trained",
+        description: "Three DeepJSCC architectures \u2014 convolutional, self-attention and fully connected \u2014 trained offline by a script in this repository on data it generates, and shipped as quantised weights with model cards. A test re-runs each card's evaluation against the shipped weights, so a card cannot drift away from the model it describes."
       },
       {
-        title: "3D Visualizations",
-        description: "Explore a rich, 3D visualization of an IRS-assisted communication link, bringing abstract concepts to life."
+        title: "Reinforcement learning on a real objective",
+        description: "REINFORCE and the cross-entropy method configure the surface using nothing but the measured reward, against random search and the closed-form optimum, under an identical evaluation budget. The convergence traces are real evaluations, recorded as they happen."
       },
       {
-        title: "Self-Paced Learning",
-        description: "Track your progress through modules and lessons, and test your knowledge with integrated assessments at your own pace."
+        title: "Stated limitations, everywhere",
+        description: "Every run lists what its models leave out \u2014 Doppler, molecular absorption, channel estimation cost, the generosity of an idealised channel code. Every export carries a provenance header. The assistant is given computed results and is audited for figures it introduces."
       }
     ]
   },

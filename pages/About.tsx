@@ -9,7 +9,7 @@ const About: React.FC = () => {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h1 className="text-4xl font-extrabold text-primary mb-2">About This Application</h1>
+        <h1 className="text-4xl font-extrabold text-primary mb-2">About this lab</h1>
         <p className="text-lg text-secondary dark:text-gray-400">{content.workshopTitle}</p>
       </div>
       

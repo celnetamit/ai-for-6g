@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Card from '../components/ui/Card';
 import LazyThreeScene from '../components/LazyThreeScene';
@@ -273,10 +274,21 @@ const IrsSimulator: React.FC = () => {
 const Tools: React.FC = () => {
   return (
     <div className="space-y-12">
-      <h1 className="text-3xl font-bold">Interactive Tools & Visualizations</h1>
+      <div>
+        <h1 className="text-3xl font-bold">Interactive tools</h1>
+        <p className="mt-2 max-w-3xl text-secondary dark:text-gray-400">
+          Standalone simulators, each exploring one idea in isolation. They are quicker to reach for
+          than a full experiment and they do not record anything — for a measured result with a
+          report and a seed, use the{' '}
+          <Link to="/experiments" className="font-semibold text-primary hover:underline">
+            experiment catalogue
+          </Link>
+          .
+        </p>
+      </div>
       
       <section>
-        <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-primary">Module 2: Semantic Communication Systems</h2>
+        <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-primary">Knowledge Bank module 4 — semantic communication</h2>
         <div className="space-y-8 mt-4">
             <SemanticCommunicationSimulator />
             <AutoencoderVisualizer />
@@ -284,14 +296,14 @@ const Tools: React.FC = () => {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-primary">Module 3: Joint Source-Channel Coding</h2>
+        <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-primary">Knowledge Bank module 5 — joint source-channel coding</h2>
          <div className="space-y-8 mt-4">
             <JSCCSimulator />
         </div>
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-primary">Module 1: Intelligent Reflecting Surfaces (IRS)</h2>
+        <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-primary">Knowledge Bank module 3 — intelligent reflecting surfaces</h2>
         <div className="space-y-8 mt-4">
             <IrsSimulator />
             <Card>

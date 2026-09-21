@@ -32,7 +32,7 @@ const Login: React.FC = () => {
             <div className="inline-block text-primary dark:text-white">
                 <LogoIcon width="64" height="64" />
             </div>
-            <h1 className="text-2xl font-bold text-on-surface-light dark:text-on-surface-dark mt-2">AI for 6G Learning Platform</h1>
+            <h1 className="text-2xl font-bold text-on-surface-light dark:text-on-surface-dark mt-2">AI for 6G Virtual Live Lab</h1>
             <p className="text-secondary dark:text-gray-400">Demo Access</p>
         </div>
 

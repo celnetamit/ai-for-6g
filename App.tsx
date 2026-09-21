@@ -3,6 +3,7 @@ import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ProgressProvider } from './context/ProgressContext';
+import { LabProvider } from './context/LabContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -23,6 +24,12 @@ const About = lazy(() => import('./pages/About'));
 const Lessons = lazy(() => import('./pages/Lessons'));
 const LessonDetail = lazy(() => import('./pages/LessonDetail'));
 const KnowledgeBank = lazy(() => import('./pages/KnowledgeBank'));
+const Levels = lazy(() => import('./pages/Levels'));
+const Experiments = lazy(() => import('./pages/Experiments'));
+const Workspace = lazy(() => import('./pages/Workspace'));
+const Datasets = lazy(() => import('./pages/Datasets'));
+const ModelEngine = lazy(() => import('./pages/ModelEngine'));
+const History = lazy(() => import('./pages/History'));
 const Tools = lazy(() => import('./pages/Tools'));
 const Assessment = lazy(() => import('./pages/Assessment'));
 const CapstoneProject = lazy(() => import('./pages/CapstoneProject'));
@@ -51,6 +58,12 @@ const AppRoutes: React.FC = () => {
         <Route path="lessons/:moduleId/:lessonId" element={<LessonDetail />} />
         <Route path="assessment/:moduleId" element={<Assessment />} />
         <Route path="knowledge-bank" element={<KnowledgeBank />} />
+        <Route path="levels" element={<Levels />} />
+        <Route path="experiments" element={<Experiments />} />
+        <Route path="experiments/:experimentId" element={<Workspace />} />
+        <Route path="datasets" element={<Datasets />} />
+        <Route path="models" element={<ModelEngine />} />
+        <Route path="history" element={<History />} />
         <Route path="tools" element={<Tools />} />
         <Route path="capstone" element={<CapstoneProject />} />
         <Route path="legal/privacy" element={<PrivacyPolicy />} />
@@ -66,18 +79,20 @@ const App: React.FC = () => (
   <ThemeProvider>
     <AuthProvider>
       <ProgressProvider>
-        <HashRouter>
-          {/*
-            ErrorBoundary wraps Suspense so that a chunk which fails to load —
-            stale cache after a deploy, flaky network — renders a recovery screen
-            rather than an indefinitely blank page.
-          */}
-          <ErrorBoundary>
-            <Suspense fallback={<RouteFallback />}>
-              <AppRoutes />
-            </Suspense>
-          </ErrorBoundary>
-        </HashRouter>
+        <LabProvider>
+          <HashRouter>
+            {/*
+              ErrorBoundary wraps Suspense so that a chunk which fails to load —
+              stale cache after a deploy, flaky network — renders a recovery screen
+              rather than an indefinitely blank page.
+            */}
+            <ErrorBoundary>
+              <Suspense fallback={<RouteFallback />}>
+                <AppRoutes />
+              </Suspense>
+            </ErrorBoundary>
+          </HashRouter>
+        </LabProvider>
       </ProgressProvider>
     </AuthProvider>
   </ThemeProvider>

@@ -1,0 +1,1490 @@
+{
+  "generatedAt": "2026-09-21T05:44:55.957Z",
+  "cards": [
+    {
+      "id": "mlp",
+      "label": "Dense autoencoder",
+      "family": "Fully connected",
+      "parameters": 31136,
+      "storedAs": "int8",
+      "bandwidthRatio": 0.125,
+      "channelUses": 32,
+      "latentDim": 64,
+      "trainedOn": {
+        "generator": "lib/sources.ts — procedural 16×16 scene primitives, 4 classes",
+        "trainSamples": 3072,
+        "valSamples": 768,
+        "trainSeed": 20260921,
+        "valSeed": 7761,
+        "sensorNoise": 0.03
+      },
+      "training": {
+        "epochs": 40,
+        "batch": 32,
+        "optimiser": "Adam, cosine-decayed from 2e-3, global-norm gradient clipping at 5",
+        "loss": "Mean squared error on pixels, taken through the channel",
+        "channel": "AWGN, SNR drawn uniformly in [-2, 20] dB per sample",
+        "rates": "Rate drawn per batch from 32, 24, 16, 8 complex channel uses (puncturing the latent tail)",
+        "seconds": 41,
+        "history": [
+          {
+            "epoch": 1,
+            "trainLoss": 0.063073,
+            "valPsnrDb": 14.218
+          },
+          {
+            "epoch": 4,
+            "trainLoss": 0.027737,
+            "valPsnrDb": 16.876
+          },
+          {
+            "epoch": 8,
+            "trainLoss": 0.020604,
+            "valPsnrDb": 18.035
+          },
+          {
+            "epoch": 12,
+            "trainLoss": 0.019166,
+            "valPsnrDb": 18.501
+          },
+          {
+            "epoch": 16,
+            "trainLoss": 0.017606,
+            "valPsnrDb": 18.882
+          },
+          {
+            "epoch": 20,
+            "trainLoss": 0.01641,
+            "valPsnrDb": 19.193
+          },
+          {
+            "epoch": 24,
+            "trainLoss": 0.015871,
+            "valPsnrDb": 19.368
+          },
+          {
+            "epoch": 28,
+            "trainLoss": 0.015382,
+            "valPsnrDb": 19.533
+          },
+          {
+            "epoch": 32,
+            "trainLoss": 0.014848,
+            "valPsnrDb": 19.591
+          },
+          {
+            "epoch": 36,
+            "trainLoss": 0.015141,
+            "valPsnrDb": 19.676
+          },
+          {
+            "epoch": 40,
+            "trainLoss": 0.014702,
+            "valPsnrDb": 19.726
+          }
+        ]
+      },
+      "evaluation": {
+        "note": "Held-out set, never trained on. Identical noise seeds across architectures.",
+        "float32": [
+          {
+            "snrDb": -5,
+            "channelUses": 32,
+            "psnrDb": 15.341,
+            "ssim": 0.6065,
+            "mse": 0.032283
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 32,
+            "psnrDb": 17.759,
+            "ssim": 0.7411,
+            "mse": 0.018621
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 32,
+            "psnrDb": 19.148,
+            "ssim": 0.7981,
+            "mse": 0.01384
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 32,
+            "psnrDb": 19.726,
+            "ssim": 0.8178,
+            "mse": 0.012287
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 32,
+            "psnrDb": 19.934,
+            "ssim": 0.8243,
+            "mse": 0.01179
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 32,
+            "psnrDb": 19.994,
+            "ssim": 0.8259,
+            "mse": 0.011661
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 32,
+            "psnrDb": 20.016,
+            "ssim": 0.8264,
+            "mse": 0.01161
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 24,
+            "psnrDb": 15.182,
+            "ssim": 0.5919,
+            "mse": 0.033729
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 24,
+            "psnrDb": 17.549,
+            "ssim": 0.7265,
+            "mse": 0.019602
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 24,
+            "psnrDb": 19.084,
+            "ssim": 0.7943,
+            "mse": 0.014064
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 24,
+            "psnrDb": 19.737,
+            "ssim": 0.8161,
+            "mse": 0.012345
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 24,
+            "psnrDb": 19.939,
+            "ssim": 0.8223,
+            "mse": 0.011855
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 24,
+            "psnrDb": 20.027,
+            "ssim": 0.825,
+            "mse": 0.011652
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 24,
+            "psnrDb": 20.054,
+            "ssim": 0.8259,
+            "mse": 0.011591
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 16,
+            "psnrDb": 14.714,
+            "ssim": 0.5441,
+            "mse": 0.037443
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 16,
+            "psnrDb": 17.217,
+            "ssim": 0.7034,
+            "mse": 0.02124
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 16,
+            "psnrDb": 18.783,
+            "ssim": 0.7757,
+            "mse": 0.015163
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 16,
+            "psnrDb": 19.495,
+            "ssim": 0.8028,
+            "mse": 0.013129
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 16,
+            "psnrDb": 19.782,
+            "ssim": 0.812,
+            "mse": 0.0124
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 16,
+            "psnrDb": 19.891,
+            "ssim": 0.8147,
+            "mse": 0.012167
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 16,
+            "psnrDb": 19.916,
+            "ssim": 0.8154,
+            "mse": 0.0121
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 8,
+            "psnrDb": 14.133,
+            "ssim": 0.4754,
+            "mse": 0.043316
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 8,
+            "psnrDb": 16.278,
+            "ssim": 0.6208,
+            "mse": 0.026572
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 8,
+            "psnrDb": 17.869,
+            "ssim": 0.7101,
+            "mse": 0.018748
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 8,
+            "psnrDb": 18.663,
+            "ssim": 0.7481,
+            "mse": 0.016048
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 8,
+            "psnrDb": 18.959,
+            "ssim": 0.7603,
+            "mse": 0.015132
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 8,
+            "psnrDb": 19.066,
+            "ssim": 0.7643,
+            "mse": 0.014819
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 8,
+            "psnrDb": 19.097,
+            "ssim": 0.7656,
+            "mse": 0.014737
+          }
+        ],
+        "int8": [
+          {
+            "snrDb": -5,
+            "channelUses": 32,
+            "psnrDb": 15.333,
+            "ssim": 0.6067,
+            "mse": 0.03235
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 32,
+            "psnrDb": 17.752,
+            "ssim": 0.7414,
+            "mse": 0.018651
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 32,
+            "psnrDb": 19.142,
+            "ssim": 0.7985,
+            "mse": 0.013857
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 32,
+            "psnrDb": 19.717,
+            "ssim": 0.8181,
+            "mse": 0.012307
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 32,
+            "psnrDb": 19.927,
+            "ssim": 0.8246,
+            "mse": 0.011806
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 32,
+            "psnrDb": 19.986,
+            "ssim": 0.8262,
+            "mse": 0.011678
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 32,
+            "psnrDb": 20.008,
+            "ssim": 0.8267,
+            "mse": 0.011626
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 24,
+            "psnrDb": 15.173,
+            "ssim": 0.5924,
+            "mse": 0.033789
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 24,
+            "psnrDb": 17.542,
+            "ssim": 0.7271,
+            "mse": 0.019633
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 24,
+            "psnrDb": 19.079,
+            "ssim": 0.795,
+            "mse": 0.014078
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 24,
+            "psnrDb": 19.732,
+            "ssim": 0.8166,
+            "mse": 0.012356
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 24,
+            "psnrDb": 19.934,
+            "ssim": 0.8229,
+            "mse": 0.011864
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 24,
+            "psnrDb": 20.022,
+            "ssim": 0.8256,
+            "mse": 0.011662
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 24,
+            "psnrDb": 20.049,
+            "ssim": 0.8265,
+            "mse": 0.011601
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 16,
+            "psnrDb": 14.708,
+            "ssim": 0.5446,
+            "mse": 0.037489
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 16,
+            "psnrDb": 17.214,
+            "ssim": 0.7039,
+            "mse": 0.021257
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 16,
+            "psnrDb": 18.778,
+            "ssim": 0.7761,
+            "mse": 0.015175
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 16,
+            "psnrDb": 19.491,
+            "ssim": 0.8033,
+            "mse": 0.013138
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 16,
+            "psnrDb": 19.777,
+            "ssim": 0.8124,
+            "mse": 0.012408
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 16,
+            "psnrDb": 19.887,
+            "ssim": 0.8151,
+            "mse": 0.012173
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 16,
+            "psnrDb": 19.912,
+            "ssim": 0.8158,
+            "mse": 0.012107
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 8,
+            "psnrDb": 14.132,
+            "ssim": 0.4758,
+            "mse": 0.04334
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 8,
+            "psnrDb": 16.277,
+            "ssim": 0.6213,
+            "mse": 0.026588
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 8,
+            "psnrDb": 17.868,
+            "ssim": 0.7105,
+            "mse": 0.01875
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 8,
+            "psnrDb": 18.661,
+            "ssim": 0.7484,
+            "mse": 0.016057
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 8,
+            "psnrDb": 18.959,
+            "ssim": 0.7607,
+            "mse": 0.015135
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 8,
+            "psnrDb": 19.066,
+            "ssim": 0.7647,
+            "mse": 0.014821
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 8,
+            "psnrDb": 19.097,
+            "ssim": 0.7659,
+            "mse": 0.014738
+          }
+        ],
+        "quantisationCostDb": 0.005
+      },
+      "rates": [
+        32,
+        24,
+        16,
+        8
+      ],
+      "limitations": [
+        "Trained on procedurally generated 16×16 scenes, not on photographs or real sensor captures. The numbers describe this source and do not transfer to natural images.",
+        "The channel during training is AWGN after equalisation. Fading is applied at evaluation time as a per-block SNR change, which is exact for a known channel but does not model channel estimation error.",
+        "The comparison between architectures holds at these bandwidth ratios and this parameter budget. A different budget can reorder them."
+      ]
+    },
+    {
+      "id": "cnn",
+      "label": "CNN DeepJSCC",
+      "family": "Convolutional",
+      "parameters": 9861,
+      "storedAs": "int8",
+      "bandwidthRatio": 0.125,
+      "channelUses": 32,
+      "latentDim": 64,
+      "trainedOn": {
+        "generator": "lib/sources.ts — procedural 16×16 scene primitives, 4 classes",
+        "trainSamples": 3072,
+        "valSamples": 768,
+        "trainSeed": 20260921,
+        "valSeed": 7761,
+        "sensorNoise": 0.03
+      },
+      "training": {
+        "epochs": 40,
+        "batch": 32,
+        "optimiser": "Adam, cosine-decayed from 2e-3, global-norm gradient clipping at 5",
+        "loss": "Mean squared error on pixels, taken through the channel",
+        "channel": "AWGN, SNR drawn uniformly in [-2, 20] dB per sample",
+        "rates": "Rate drawn per batch from 32, 24, 16, 8 complex channel uses (puncturing the latent tail)",
+        "seconds": 515,
+        "history": [
+          {
+            "epoch": 1,
+            "trainLoss": 0.044124,
+            "valPsnrDb": 17.04
+          },
+          {
+            "epoch": 4,
+            "trainLoss": 0.018092,
+            "valPsnrDb": 20.114
+          },
+          {
+            "epoch": 8,
+            "trainLoss": 0.015392,
+            "valPsnrDb": 20.874
+          },
+          {
+            "epoch": 12,
+            "trainLoss": 0.016346,
+            "valPsnrDb": 21.341
+          },
+          {
+            "epoch": 16,
+            "trainLoss": 0.015465,
+            "valPsnrDb": 21.553
+          },
+          {
+            "epoch": 20,
+            "trainLoss": 0.014458,
+            "valPsnrDb": 21.8
+          },
+          {
+            "epoch": 24,
+            "trainLoss": 0.014196,
+            "valPsnrDb": 21.955
+          },
+          {
+            "epoch": 28,
+            "trainLoss": 0.01408,
+            "valPsnrDb": 22.107
+          },
+          {
+            "epoch": 32,
+            "trainLoss": 0.013541,
+            "valPsnrDb": 22.123
+          },
+          {
+            "epoch": 36,
+            "trainLoss": 0.014189,
+            "valPsnrDb": 22.144
+          },
+          {
+            "epoch": 40,
+            "trainLoss": 0.013618,
+            "valPsnrDb": 22.232
+          }
+        ]
+      },
+      "evaluation": {
+        "note": "Held-out set, never trained on. Identical noise seeds across architectures.",
+        "float32": [
+          {
+            "snrDb": -5,
+            "channelUses": 32,
+            "psnrDb": 14.854,
+            "ssim": 0.5569,
+            "mse": 0.036628
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 32,
+            "psnrDb": 18.095,
+            "ssim": 0.7666,
+            "mse": 0.017571
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 32,
+            "psnrDb": 20.724,
+            "ssim": 0.8696,
+            "mse": 0.0096468
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 32,
+            "psnrDb": 22.232,
+            "ssim": 0.9055,
+            "mse": 0.006905
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 32,
+            "psnrDb": 22.928,
+            "ssim": 0.9186,
+            "mse": 0.0059652
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 32,
+            "psnrDb": 23.134,
+            "ssim": 0.922,
+            "mse": 0.0057147
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 32,
+            "psnrDb": 23.197,
+            "ssim": 0.9231,
+            "mse": 0.0056339
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 24,
+            "psnrDb": 14.388,
+            "ssim": 0.5173,
+            "mse": 0.040417
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 24,
+            "psnrDb": 17.471,
+            "ssim": 0.7344,
+            "mse": 0.020361
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 24,
+            "psnrDb": 20.199,
+            "ssim": 0.8509,
+            "mse": 0.010938
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 24,
+            "psnrDb": 21.683,
+            "ssim": 0.8916,
+            "mse": 0.0079638
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 24,
+            "psnrDb": 22.333,
+            "ssim": 0.905,
+            "mse": 0.0069271
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 24,
+            "psnrDb": 22.567,
+            "ssim": 0.9094,
+            "mse": 0.0066166
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 24,
+            "psnrDb": 22.652,
+            "ssim": 0.9109,
+            "mse": 0.0064929
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 16,
+            "psnrDb": 13.939,
+            "ssim": 0.4593,
+            "mse": 0.045174
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 16,
+            "psnrDb": 16.779,
+            "ssim": 0.6811,
+            "mse": 0.023701
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 16,
+            "psnrDb": 19.055,
+            "ssim": 0.7965,
+            "mse": 0.014396
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 16,
+            "psnrDb": 20.381,
+            "ssim": 0.8444,
+            "mse": 0.01085
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 16,
+            "psnrDb": 20.97,
+            "ssim": 0.8609,
+            "mse": 0.0096059
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 16,
+            "psnrDb": 21.181,
+            "ssim": 0.8664,
+            "mse": 0.0092159
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 16,
+            "psnrDb": 21.256,
+            "ssim": 0.8681,
+            "mse": 0.0090867
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 8,
+            "psnrDb": 13.443,
+            "ssim": 0.4,
+            "mse": 0.051059
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 8,
+            "psnrDb": 15.624,
+            "ssim": 0.5711,
+            "mse": 0.030959
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 8,
+            "psnrDb": 17.071,
+            "ssim": 0.6736,
+            "mse": 0.022401
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 8,
+            "psnrDb": 17.804,
+            "ssim": 0.7128,
+            "mse": 0.019127
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 8,
+            "psnrDb": 18.085,
+            "ssim": 0.7256,
+            "mse": 0.018034
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 8,
+            "psnrDb": 18.192,
+            "ssim": 0.7325,
+            "mse": 0.017643
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 8,
+            "psnrDb": 18.224,
+            "ssim": 0.7337,
+            "mse": 0.01752
+          }
+        ],
+        "int8": [
+          {
+            "snrDb": -5,
+            "channelUses": 32,
+            "psnrDb": 14.865,
+            "ssim": 0.5578,
+            "mse": 0.03655
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 32,
+            "psnrDb": 18.094,
+            "ssim": 0.7664,
+            "mse": 0.017575
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 32,
+            "psnrDb": 20.717,
+            "ssim": 0.8692,
+            "mse": 0.0096619
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 32,
+            "psnrDb": 22.223,
+            "ssim": 0.9051,
+            "mse": 0.0069222
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 32,
+            "psnrDb": 22.917,
+            "ssim": 0.9182,
+            "mse": 0.0059832
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 32,
+            "psnrDb": 23.122,
+            "ssim": 0.9216,
+            "mse": 0.0057328
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 32,
+            "psnrDb": 23.185,
+            "ssim": 0.9227,
+            "mse": 0.0056515
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 24,
+            "psnrDb": 14.396,
+            "ssim": 0.5178,
+            "mse": 0.040367
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 24,
+            "psnrDb": 17.471,
+            "ssim": 0.7342,
+            "mse": 0.020354
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 24,
+            "psnrDb": 20.194,
+            "ssim": 0.8505,
+            "mse": 0.010948
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 24,
+            "psnrDb": 21.675,
+            "ssim": 0.8912,
+            "mse": 0.0079801
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 24,
+            "psnrDb": 22.32,
+            "ssim": 0.9046,
+            "mse": 0.006945
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 24,
+            "psnrDb": 22.552,
+            "ssim": 0.909,
+            "mse": 0.006637
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 24,
+            "psnrDb": 22.637,
+            "ssim": 0.9105,
+            "mse": 0.0065128
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 16,
+            "psnrDb": 13.939,
+            "ssim": 0.4588,
+            "mse": 0.04517
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 16,
+            "psnrDb": 16.781,
+            "ssim": 0.6805,
+            "mse": 0.023683
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 16,
+            "psnrDb": 19.045,
+            "ssim": 0.7955,
+            "mse": 0.01442
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 16,
+            "psnrDb": 20.369,
+            "ssim": 0.8436,
+            "mse": 0.010874
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 16,
+            "psnrDb": 20.957,
+            "ssim": 0.8602,
+            "mse": 0.0096291
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 16,
+            "psnrDb": 21.166,
+            "ssim": 0.8656,
+            "mse": 0.0092389
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 16,
+            "psnrDb": 21.242,
+            "ssim": 0.8674,
+            "mse": 0.0091094
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 8,
+            "psnrDb": 13.439,
+            "ssim": 0.3995,
+            "mse": 0.051093
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 8,
+            "psnrDb": 15.621,
+            "ssim": 0.5702,
+            "mse": 0.030966
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 8,
+            "psnrDb": 17.06,
+            "ssim": 0.6724,
+            "mse": 0.022429
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 8,
+            "psnrDb": 17.781,
+            "ssim": 0.7114,
+            "mse": 0.019187
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 8,
+            "psnrDb": 18.057,
+            "ssim": 0.7241,
+            "mse": 0.018104
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 8,
+            "psnrDb": 18.163,
+            "ssim": 0.731,
+            "mse": 0.017714
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 8,
+            "psnrDb": 18.193,
+            "ssim": 0.7321,
+            "mse": 0.017594
+          }
+        ],
+        "quantisationCostDb": 0.01
+      },
+      "rates": [
+        32,
+        24,
+        16,
+        8
+      ],
+      "limitations": [
+        "Trained on procedurally generated 16×16 scenes, not on photographs or real sensor captures. The numbers describe this source and do not transfer to natural images.",
+        "The channel during training is AWGN after equalisation. Fading is applied at evaluation time as a per-block SNR change, which is exact for a known channel but does not model channel estimation error.",
+        "The comparison between architectures holds at these bandwidth ratios and this parameter budget. A different budget can reorder them."
+      ]
+    },
+    {
+      "id": "transformer",
+      "label": "Transformer DeepJSCC",
+      "family": "Self-attention",
+      "parameters": 19476,
+      "storedAs": "int8",
+      "bandwidthRatio": 0.125,
+      "channelUses": 32,
+      "latentDim": 64,
+      "trainedOn": {
+        "generator": "lib/sources.ts — procedural 16×16 scene primitives, 4 classes",
+        "trainSamples": 3072,
+        "valSamples": 768,
+        "trainSeed": 20260921,
+        "valSeed": 7761,
+        "sensorNoise": 0.03
+      },
+      "training": {
+        "epochs": 40,
+        "batch": 32,
+        "optimiser": "Adam, cosine-decayed from 2e-3, global-norm gradient clipping at 5",
+        "loss": "Mean squared error on pixels, taken through the channel",
+        "channel": "AWGN, SNR drawn uniformly in [-2, 20] dB per sample",
+        "rates": "Rate drawn per batch from 32, 24, 16, 8 complex channel uses (puncturing the latent tail)",
+        "seconds": 557,
+        "history": [
+          {
+            "epoch": 1,
+            "trainLoss": 0.05456,
+            "valPsnrDb": 17.178
+          },
+          {
+            "epoch": 4,
+            "trainLoss": 0.025703,
+            "valPsnrDb": 19.967
+          },
+          {
+            "epoch": 8,
+            "trainLoss": 0.022596,
+            "valPsnrDb": 20.507
+          },
+          {
+            "epoch": 12,
+            "trainLoss": 0.023736,
+            "valPsnrDb": 20.845
+          },
+          {
+            "epoch": 16,
+            "trainLoss": 0.022571,
+            "valPsnrDb": 20.813
+          },
+          {
+            "epoch": 20,
+            "trainLoss": 0.020519,
+            "valPsnrDb": 21.22
+          },
+          {
+            "epoch": 24,
+            "trainLoss": 0.02031,
+            "valPsnrDb": 21.038
+          },
+          {
+            "epoch": 28,
+            "trainLoss": 0.019666,
+            "valPsnrDb": 21.409
+          },
+          {
+            "epoch": 32,
+            "trainLoss": 0.018676,
+            "valPsnrDb": 21.441
+          },
+          {
+            "epoch": 36,
+            "trainLoss": 0.01899,
+            "valPsnrDb": 21.441
+          },
+          {
+            "epoch": 40,
+            "trainLoss": 0.018528,
+            "valPsnrDb": 21.431
+          }
+        ]
+      },
+      "evaluation": {
+        "note": "Held-out set, never trained on. Identical noise seeds across architectures.",
+        "float32": [
+          {
+            "snrDb": -5,
+            "channelUses": 32,
+            "psnrDb": 13.597,
+            "ssim": 0.4563,
+            "mse": 0.047476
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 32,
+            "psnrDb": 17.003,
+            "ssim": 0.7036,
+            "mse": 0.022806
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 32,
+            "psnrDb": 19.913,
+            "ssim": 0.8388,
+            "mse": 0.011922
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 32,
+            "psnrDb": 21.431,
+            "ssim": 0.884,
+            "mse": 0.0084517
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 32,
+            "psnrDb": 22.096,
+            "ssim": 0.8987,
+            "mse": 0.0072764
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 32,
+            "psnrDb": 22.339,
+            "ssim": 0.9039,
+            "mse": 0.0068844
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 32,
+            "psnrDb": 22.418,
+            "ssim": 0.9052,
+            "mse": 0.0067662
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 24,
+            "psnrDb": 14.034,
+            "ssim": 0.4677,
+            "mse": 0.043378
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 24,
+            "psnrDb": 16.662,
+            "ssim": 0.6638,
+            "mse": 0.025023
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 24,
+            "psnrDb": 18.998,
+            "ssim": 0.7888,
+            "mse": 0.015174
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 24,
+            "psnrDb": 20.294,
+            "ssim": 0.8367,
+            "mse": 0.011627
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 24,
+            "psnrDb": 20.783,
+            "ssim": 0.8506,
+            "mse": 0.010501
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 24,
+            "psnrDb": 20.988,
+            "ssim": 0.8557,
+            "mse": 0.010078
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 24,
+            "psnrDb": 21.053,
+            "ssim": 0.8574,
+            "mse": 0.0099624
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 16,
+            "psnrDb": 14.079,
+            "ssim": 0.4,
+            "mse": 0.043512
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 16,
+            "psnrDb": 16.013,
+            "ssim": 0.567,
+            "mse": 0.029118
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 16,
+            "psnrDb": 17.556,
+            "ssim": 0.6763,
+            "mse": 0.02097
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 16,
+            "psnrDb": 18.35,
+            "ssim": 0.7189,
+            "mse": 0.017923
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 16,
+            "psnrDb": 18.672,
+            "ssim": 0.7337,
+            "mse": 0.016829
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 16,
+            "psnrDb": 18.809,
+            "ssim": 0.739,
+            "mse": 0.01642
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 16,
+            "psnrDb": 18.829,
+            "ssim": 0.7403,
+            "mse": 0.01635
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 8,
+            "psnrDb": 14.102,
+            "ssim": 0.319,
+            "mse": 0.043509
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 8,
+            "psnrDb": 15.185,
+            "ssim": 0.4278,
+            "mse": 0.034389
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 8,
+            "psnrDb": 15.962,
+            "ssim": 0.4996,
+            "mse": 0.02889
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 8,
+            "psnrDb": 16.288,
+            "ssim": 0.5261,
+            "mse": 0.026946
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 8,
+            "psnrDb": 16.437,
+            "ssim": 0.5389,
+            "mse": 0.026028
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 8,
+            "psnrDb": 16.475,
+            "ssim": 0.5417,
+            "mse": 0.025819
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 8,
+            "psnrDb": 16.487,
+            "ssim": 0.5426,
+            "mse": 0.02576
+          }
+        ],
+        "int8": [
+          {
+            "snrDb": -5,
+            "channelUses": 32,
+            "psnrDb": 13.616,
+            "ssim": 0.4568,
+            "mse": 0.047299
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 32,
+            "psnrDb": 17.004,
+            "ssim": 0.7037,
+            "mse": 0.022804
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 32,
+            "psnrDb": 19.889,
+            "ssim": 0.8383,
+            "mse": 0.011982
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 32,
+            "psnrDb": 21.396,
+            "ssim": 0.8835,
+            "mse": 0.0085101
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 32,
+            "psnrDb": 22.06,
+            "ssim": 0.8982,
+            "mse": 0.0073284
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 32,
+            "psnrDb": 22.299,
+            "ssim": 0.9033,
+            "mse": 0.0069372
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 32,
+            "psnrDb": 22.38,
+            "ssim": 0.9047,
+            "mse": 0.0068177
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 24,
+            "psnrDb": 14.05,
+            "ssim": 0.4685,
+            "mse": 0.043248
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 24,
+            "psnrDb": 16.666,
+            "ssim": 0.6642,
+            "mse": 0.025008
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 24,
+            "psnrDb": 18.981,
+            "ssim": 0.7887,
+            "mse": 0.015218
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 24,
+            "psnrDb": 20.267,
+            "ssim": 0.8364,
+            "mse": 0.011683
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 24,
+            "psnrDb": 20.75,
+            "ssim": 0.8503,
+            "mse": 0.010552
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 24,
+            "psnrDb": 20.954,
+            "ssim": 0.8555,
+            "mse": 0.010125
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 24,
+            "psnrDb": 21.02,
+            "ssim": 0.8573,
+            "mse": 0.010008
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 16,
+            "psnrDb": 14.101,
+            "ssim": 0.4016,
+            "mse": 0.043341
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 16,
+            "psnrDb": 16.02,
+            "ssim": 0.5681,
+            "mse": 0.029065
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 16,
+            "psnrDb": 17.543,
+            "ssim": 0.6761,
+            "mse": 0.021012
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 16,
+            "psnrDb": 18.326,
+            "ssim": 0.7183,
+            "mse": 0.017986
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 16,
+            "psnrDb": 18.646,
+            "ssim": 0.7332,
+            "mse": 0.016888
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 16,
+            "psnrDb": 18.777,
+            "ssim": 0.7383,
+            "mse": 0.016495
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 16,
+            "psnrDb": 18.798,
+            "ssim": 0.7396,
+            "mse": 0.016421
+          },
+          {
+            "snrDb": -5,
+            "channelUses": 8,
+            "psnrDb": 14.117,
+            "ssim": 0.3203,
+            "mse": 0.04338
+          },
+          {
+            "snrDb": 0,
+            "channelUses": 8,
+            "psnrDb": 15.186,
+            "ssim": 0.4286,
+            "mse": 0.034408
+          },
+          {
+            "snrDb": 5,
+            "channelUses": 8,
+            "psnrDb": 15.956,
+            "ssim": 0.5005,
+            "mse": 0.028948
+          },
+          {
+            "snrDb": 10,
+            "channelUses": 8,
+            "psnrDb": 16.28,
+            "ssim": 0.5269,
+            "mse": 0.027023
+          },
+          {
+            "snrDb": 15,
+            "channelUses": 8,
+            "psnrDb": 16.43,
+            "ssim": 0.5398,
+            "mse": 0.026096
+          },
+          {
+            "snrDb": 20,
+            "channelUses": 8,
+            "psnrDb": 16.468,
+            "ssim": 0.5427,
+            "mse": 0.025887
+          },
+          {
+            "snrDb": 25,
+            "channelUses": 8,
+            "psnrDb": 16.481,
+            "ssim": 0.5435,
+            "mse": 0.025826
+          }
+        ],
+        "quantisationCostDb": 0.014
+      },
+      "rates": [
+        32,
+        24,
+        16,
+        8
+      ],
+      "limitations": [
+        "Trained on procedurally generated 16×16 scenes, not on photographs or real sensor captures. The numbers describe this source and do not transfer to natural images.",
+        "The channel during training is AWGN after equalisation. Fading is applied at evaluation time as a per-block SNR change, which is exact for a known channel but does not model channel estimation error.",
+        "The comparison between architectures holds at these bandwidth ratios and this parameter budget. A different budget can reorder them."
+      ]
+    }
+  ]
+}

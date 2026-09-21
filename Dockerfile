@@ -18,6 +18,43 @@ RUN npm ci
 
 COPY . .
 
+# ---------------------------------------------------------------------------
+# Build-time configuration.
+#
+# Vite inlines `import.meta.env.VITE_*` at BUILD time, not at run time, so a
+# variable that is only present in the container's environment reaches nothing:
+# by then the bundle is already written. Without these ARGs an operator could
+# set VITE_LLM_PROXY_URL in Coolify, see it in the running container, and still
+# find the Copilot absent — because the build never saw it.
+#
+# Each is declared ARG (so `--build-arg` / a Coolify *build* variable can set
+# it) and promoted to ENV (so Vite picks it up). All are optional: unset, the
+# app falls back to the defaults documented in .env.example.
+# ---------------------------------------------------------------------------
+ARG VITE_APP_ENV=production
+ARG VITE_LAB_AUTH_ENABLED
+ARG VITE_LAB_AUTH_VERIFY_URL
+ARG VITE_LAB_LOGIN_URL
+ARG VITE_LAB_HOME_URL
+ARG VITE_LAB_AUTH_REVALIDATE_MS
+ARG VITE_DEMO_USER
+ARG VITE_DEMO_PASSWORD
+ARG VITE_LLM_PROXY_URL
+ARG VITE_LLM_MODEL
+ARG VITE_LLM_TIMEOUT_MS
+
+ENV VITE_APP_ENV=$VITE_APP_ENV \
+    VITE_LAB_AUTH_ENABLED=$VITE_LAB_AUTH_ENABLED \
+    VITE_LAB_AUTH_VERIFY_URL=$VITE_LAB_AUTH_VERIFY_URL \
+    VITE_LAB_LOGIN_URL=$VITE_LAB_LOGIN_URL \
+    VITE_LAB_HOME_URL=$VITE_LAB_HOME_URL \
+    VITE_LAB_AUTH_REVALIDATE_MS=$VITE_LAB_AUTH_REVALIDATE_MS \
+    VITE_DEMO_USER=$VITE_DEMO_USER \
+    VITE_DEMO_PASSWORD=$VITE_DEMO_PASSWORD \
+    VITE_LLM_PROXY_URL=$VITE_LLM_PROXY_URL \
+    VITE_LLM_MODEL=$VITE_LLM_MODEL \
+    VITE_LLM_TIMEOUT_MS=$VITE_LLM_TIMEOUT_MS
+
 # Typecheck as part of the image build, so a type error fails the deploy rather
 # than shipping broken code.
 # `verify` rather than typecheck+build: it also runs the test suite, which is

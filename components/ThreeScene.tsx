@@ -6,8 +6,33 @@
 import React, { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 // FIX: Import Line component from drei to avoid conflict with SVG line element
-import { OrbitControls, Text, Grid, Billboard, Line } from '@react-three/drei';
+import { OrbitControls, Html, Grid, Billboard, Line } from '@react-three/drei';
 import * as THREE from 'three';
+
+/**
+ * Labels are DOM, not 3D text, and that is a Content-Security-Policy decision.
+ *
+ * drei's <Text> is backed by troika, which needs a font file and defaults to
+ * fetching one from a CDN. The production CSP sets `connect-src 'self'`, so
+ * that fetch is refused — and because the <Text> sits inside the scene graph,
+ * the rejection took the whole render with it. **The deployed Tools page showed
+ * an empty box where the 3D visualisation should be**, while `npm run dev` and
+ * `vite preview` — neither of which serves the CSP — rendered it perfectly.
+ * That is why it survived every previous round of browser testing.
+ *
+ * Three ways out, and why this one:
+ *   - weakening `connect-src` to allow a font CDN: a third-party origin added
+ *     to the policy of every page, to letter four labels;
+ *   - shipping a font: a ~150 kB binary and a licence to track, for four labels
+ *     in one widget, in an app that otherwise uses only system fonts;
+ *   - <Html>: drei projects a DOM node to a 3D position. No font fetch, no new
+ *     asset, no policy change, and it inherits the app's own typography.
+ *
+ * The trade is that DOM labels do not occlude behind geometry. For four
+ * annotations on a scene the learner rotates, that is the cheaper loss.
+ */
+const LABEL_CLASS =
+  'pointer-events-none select-none whitespace-nowrap rounded bg-black/70 px-1.5 py-0.5 text-xs font-semibold text-white';
 
 const IRS_ELEMENT_COUNT = 10;
 const IRS_SIZE = 4;
@@ -116,16 +141,11 @@ const IrsSystem: React.FC = () => {
                         selectedElement.position[2]
                     ]}
                 >
-                    <Text
-                        fontSize={0.25}
-                        color="white"
-                        anchorX="center"
-                        anchorY="middle"
-                        outlineWidth={0.01}
-                        outlineColor="black"
-                    >
-                        {`Phase: ${selectedElement.phase.toFixed(2)}`}
-                    </Text>
+                    <Html center distanceFactor={12}>
+                        <span className={LABEL_CLASS}>
+                            {`Phase: ${selectedElement.phase.toFixed(2)}`}
+                        </span>
+                    </Html>
                 </Billboard>
             )}
         </group>
@@ -167,7 +187,9 @@ const Scene: React.FC = () => {
                 <meshStandardMaterial color="orange" />
             </mesh>
             <Billboard position={[-5, 2.5, 5]}>
-                <Text fontSize={0.3} color="white" outlineWidth={0.01} outlineColor="black">Transmitter</Text>
+                <Html center distanceFactor={12}>
+                    <span className={LABEL_CLASS}>Transmitter</span>
+                </Html>
             </Billboard>
 
             <mesh position={receiverPos}>
@@ -175,10 +197,14 @@ const Scene: React.FC = () => {
                 <meshStandardMaterial color="purple" />
             </mesh>
             <Billboard position={[5, -1.5, 5]}>
-                 <Text fontSize={0.3} color="white" outlineWidth={0.01} outlineColor="black">Receiver</Text>
+                 <Html center distanceFactor={12}>
+                    <span className={LABEL_CLASS}>Receiver</span>
+                </Html>
             </Billboard>
 
-            <Text position={[0, -2.5, 0]} fontSize={0.3} color="white">Intelligent Reflecting Surface</Text>
+            <Html position={[0, -2.5, 0]} center distanceFactor={12}>
+                <span className={LABEL_CLASS}>Intelligent Reflecting Surface</span>
+            </Html>
             
             <OrbitControls />
              {/* FIX: Replaced shorthand props rotation-x and position-z with their full array counterparts to prevent potential parsing issues in the R3F reconciler. */}

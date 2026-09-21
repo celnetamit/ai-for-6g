@@ -158,3 +158,6 @@ id_ed25519*
 .terraform/
 *.tfstate
 *.tfstate.backup
+# Verification build: a copy of dist made with the lab auth gate disabled, so
+# the production bundle can be driven in a headless browser. Never deploy it.
+dist-verify/

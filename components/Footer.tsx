@@ -15,7 +15,11 @@ const Footer: React.FC = () => {
         </div>
         <p>Contact us at <a href="mailto:info@nstc.in" className="text-primary hover:underline">info@nstc.in</a></p>
         <p className="mt-2">© {currentYear} nanoschool.in and Nano Science and Technology Consortium (NSTC). All rights reserved.</p>
-        <p className="text-xs mt-4">This is a demo application for educational purposes. All content is illustrative.</p>
+        <p className="mt-4 text-xs">
+          Educational simulator. Every figure it displays is computed by its own engine from the
+          parameters you set, using teaching models. Nothing here is a measurement of a deployed
+          network, and none of it has been validated against hardware.
+        </p>
       </div>
     </footer>
   );
