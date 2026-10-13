@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
 import { useLab } from '../context/LabContext';
 import SunIcon from './icons/SunIcon';
 import MoonIcon from './icons/MoonIcon';
 import LogoIcon from './icons/LogoIcon';
-import Button from './ui/Button';
 import MenuIcon from './icons/MenuIcon';
 import CloseIcon from './icons/CloseIcon';
 
@@ -54,9 +52,8 @@ const linkClass = (isActive: boolean, mobile: boolean): string => {
   }`;
 };
 
-const Header: React.FC = () => {
+const Header: React.FC<{ onSendFeedback?: () => void }> = ({ onSendFeedback }) => {
   const { theme, toggleTheme } = useTheme();
-  const { logout } = useAuth();
   const { level } = useLab();
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -166,6 +163,15 @@ const Header: React.FC = () => {
                 {level}
               </NavLink>
             )}
+            {onSendFeedback && (
+              <button
+                type="button"
+                onClick={onSendFeedback}
+                className="hidden rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold transition-colors hover:border-primary hover:text-primary sm:inline-block dark:border-gray-600"
+              >
+                Send feedback
+              </button>
+            )}
             <button
               type="button"
               onClick={toggleTheme}
@@ -174,11 +180,6 @@ const Header: React.FC = () => {
             >
               {theme === 'dark' ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
             </button>
-            <div className="hidden sm:block">
-              <Button onClick={logout} variant="secondary">
-                Logout
-              </Button>
-            </div>
             <div className="lg:hidden">
               <button
                 type="button"
@@ -208,11 +209,15 @@ const Header: React.FC = () => {
                 {item.label}
               </NavLink>
             ))}
-            <div className="mt-4 border-t border-gray-200 pt-4 sm:hidden dark:border-gray-700">
-              <Button onClick={logout} variant="secondary" className="w-full">
-                Logout
-              </Button>
-            </div>
+            {onSendFeedback && (
+              <button
+                type="button"
+                onClick={onSendFeedback}
+                className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-on-surface-light hover:bg-gray-200 dark:text-on-surface-dark dark:hover:bg-gray-700"
+              >
+                Send feedback
+              </button>
+            )}
           </nav>
         </div>
       )}

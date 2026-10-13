@@ -73,7 +73,10 @@ export default defineConfig(({ mode }) => {
 
     test: {
       environment: 'node',
-      include: ['tests/**/*.test.ts'],
+      // `.tsx` as well: component regression tests live beside the pure-logic
+      // ones, and a pattern that silently matched none of them reported "no test
+      // files found" rather than failing anything.
+      include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
       // Hook tests opt into jsdom per-file via a `@vitest-environment` comment,
       // so the fast node environment stays the default for pure-logic suites.
       globals: false,

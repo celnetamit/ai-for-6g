@@ -5,8 +5,6 @@ interface ImportMetaEnv {
   readonly VITE_APP_ENV?: string;
 
   /** Demo credentials for the workshop login. Never real secrets — see AuthContext. */
-  readonly VITE_DEMO_USER?: string;
-  readonly VITE_DEMO_PASSWORD?: string;
 
   /** Set to 'false' to bypass the central lab authorization gate (local development). */
   readonly VITE_LAB_AUTH_ENABLED?: string;

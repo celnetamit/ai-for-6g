@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Footer: React.FC = () => {
+const Footer: React.FC<{ onSendFeedback?: () => void }> = ({ onSendFeedback }) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -12,6 +12,15 @@ const Footer: React.FC = () => {
           <Link to="/legal/privacy" className="hover:text-primary dark:hover:text-white">Privacy Policy</Link>
           <Link to="/legal/terms" className="hover:text-primary dark:hover:text-white">Terms of Service</Link>
           <Link to="/about" className="hover:text-primary dark:hover:text-white">About</Link>
+          {onSendFeedback && (
+            <button
+              type="button"
+              onClick={onSendFeedback}
+              className="hover:text-primary dark:hover:text-white"
+            >
+              Send feedback
+            </button>
+          )}
         </div>
         <p>Contact us at <a href="mailto:info@nstc.in" className="text-primary hover:underline">info@nstc.in</a></p>
         <p className="mt-2">© {currentYear} nanoschool.in and Nano Science and Technology Consortium (NSTC). All rights reserved.</p>

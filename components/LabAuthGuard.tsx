@@ -1,22 +1,23 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { appConfig } from '../lib/config';
+import { hubBaseUrl, setHubSessionToken } from '../lib/hub/hub';
+import { getIdentity, identityFromAuthResponse, setIdentity } from '../lib/hub/identity';
 
 const TOKEN_KEY = '__lab_auth_token';
 const VERIFIED_AT_KEY = '__lab_verified_at';
 const REDIRECT_ATTEMPT_KEY = '__lab_redirect_attempt';
 const MAX_REDIRECT_ATTEMPTS = 2;
 
-const env = import.meta.env;
-
-const CONFIG = {
-  // Default off in dev so `npm run dev` does not bounce the developer to the
-  // central portal; on for production builds.
-  enabled: env.VITE_LAB_AUTH_ENABLED ? env.VITE_LAB_AUTH_ENABLED !== 'false' : Boolean(env.PROD),
-  verifyUrl: env.VITE_LAB_AUTH_VERIFY_URL || 'https://live-labs.org/api/auth/authorize-lab',
-  loginUrl: env.VITE_LAB_LOGIN_URL || 'https://live-labs.org/login',
-  homeUrl: env.VITE_LAB_HOME_URL || 'https://live-labs.org/labs',
-  revalidateMs: Number.parseInt(env.VITE_LAB_AUTH_REVALIDATE_MS ?? '', 10) || 900_000,
-  verifyTimeoutMs: 15_000,
-} as const;
+/**
+ * Read from `lib/config.ts` rather than from `import.meta.env` here.
+ *
+ * The hub client needs the same verification URL to know where to POST
+ * feedback and reviewer agreements, and two independent readings of "where is
+ * live-labs.org" is one too many — a deployment pointed at a staging hub for
+ * authorisation and production for data storage is a mistake worth making
+ * impossible.
+ */
+const CONFIG = appConfig.auth;
 
 type GuardState =
   | { status: 'checking' }
@@ -117,14 +118,27 @@ export const LabAuthGuard: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ token, domainUrl: window.location.origin }),
       });
 
+      /*
+       * The hub is the only party that can verify the launch token — it holds
+       * the signing secret — so the identity and the API credential are taken
+       * from its answer rather than decoded from the token. Nothing here parses
+       * a credential this lab does not issue; in a sibling lab that mistake put
+       * every learner on one shared identity.
+       */
       const data = (await response.json().catch(() => ({}))) as {
         authorized?: boolean;
         message?: string;
+        sessionToken?: string;
+        user?: { id?: string; email?: string; name?: string; role?: string; isReviewer?: boolean };
+        lab?: { id?: string; slug?: string };
       };
 
       if (!response.ok || !data.authorized) {
         removeStorage(TOKEN_KEY);
         removeStorage(VERIFIED_AT_KEY);
+        // A denied session must not leave a usable credential or a name behind.
+        setHubSessionToken(null);
+        setIdentity(null);
         setState({
           status: 'denied',
           message: data.message || 'You are not authorized to access this lab.',
@@ -136,6 +150,13 @@ export const LabAuthGuard: React.FC<{ children: React.ReactNode }> = ({ children
 
       writeStorage(TOKEN_KEY, token);
       writeStorage(VERIFIED_AT_KEY, String(Date.now()));
+      if (typeof data.sessionToken === 'string' && data.sessionToken !== '') {
+        setHubSessionToken(data.sessionToken);
+      }
+      // Null rather than a placeholder when the hub named nobody: an invented
+      // identity is how separate people end up sharing a history.
+      const identity = identityFromAuthResponse(data);
+      if (identity) setIdentity(identity);
       removeStorage(REDIRECT_ATTEMPT_KEY);
       setState({ status: 'authorized' });
     } catch {
@@ -218,27 +239,44 @@ export const LabAuthGuard: React.FC<{ children: React.ReactNode }> = ({ children
     );
   }
 
+  /*
+   * Built from the slug the hub itself returned where there is one, so the
+   * link follows a rename rather than quietly 404ing. Falls back to the
+   * configured URL when the lab is opened outside a hub session — in dev, for
+   * instance, where there is no identity at all.
+   */
+  const identity = getIdentity();
+  const homeHref = identity?.labSlug
+    ? `${hubBaseUrl()}/dashboard/labs/${identity.labSlug}`
+    : CONFIG.homeUrl;
+
   return (
     <>
+      {/*
+        Deliberately small. It floats over the lab at every scroll position, so
+        it competes with the content for attention the whole time someone is
+        working — and on a phone the previous size covered a slider control on
+        the parameter panel. It needs to be findable, not prominent.
+      */}
       <a
-        href={CONFIG.homeUrl}
-        className="fixed bottom-6 left-6 z-[9999] inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white"
+        href={homeHref}
+        className="fixed bottom-4 left-4 z-[9999] inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-900/90 px-3 py-1.5 text-xs font-semibold text-white shadow-md backdrop-blur-sm transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
+          width="13"
+          height="13"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden="true"
         >
           <path d="m15 18-6-6 6-6" />
         </svg>
-        Back to Labs
+        Back to homepage
       </a>
       {children}
     </>

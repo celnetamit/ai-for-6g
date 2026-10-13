@@ -7,6 +7,7 @@ import { useLab } from '../context/LabContext';
 import { content } from '../data/content';
 import { KNOWLEDGE_MODULES } from '../data/knowledge';
 import { EXPERIMENTS, LEVEL_ORDER, experimentById } from '../lib/experiment';
+import WorkflowDiagram from '../components/lab/WorkflowDiagram';
 
 /**
  * User dashboard (spec §10.1).
@@ -16,18 +17,6 @@ import { EXPERIMENTS, LEVEL_ORDER, experimentById } from '../lib/experiment';
  * the nine stages of §4 are the mental model the whole lab is organised around,
  * and a learner who has seen it once can place any screen they land on.
  */
-
-const WORKFLOW = [
-  { label: 'Scenario', detail: 'Pick an experiment — a question with a measurable answer.', to: '/experiments' },
-  { label: 'Parameters', detail: 'Frequency, bandwidth, users, distance, power, noise.', to: '/experiments' },
-  { label: 'Channel', detail: 'Line of sight, urban NLOS, indoor, or high mobility.', to: '/experiments' },
-  { label: 'AI model', detail: 'A trained encoder, or a search method for the surface.', to: '/models' },
-  { label: 'Simulation', detail: 'Generate channels, transmit symbols, count errors.', to: '/experiments' },
-  { label: 'Evaluation', detail: 'Throughput, latency, energy, BER, signal quality.', to: '/experiments' },
-  { label: 'Optimisation', detail: 'Measured sensitivity to every parameter you could change.', to: '/experiments' },
-  { label: 'Visualisation', detail: 'Waterfalls, sweeps, constellations, reconstructions.', to: '/experiments' },
-  { label: 'Report', detail: 'Methods, results, discussion, limitations, reproduction.', to: '/history' },
-];
 
 const MODULES = [
   { title: 'Knowledge Bank', description: 'Five modules, from 3G-to-6G history to DeepJSCC.', to: '/knowledge-bank' },
@@ -88,22 +77,9 @@ const Dashboard: React.FC = () => {
       <section>
         <SectionHeading
           title="How the lab works"
-          description="Nine stages, from a question to a report. Every experiment walks the same path; they differ in which stages carry the weight."
+          description="One path with a loop in it: four choices, one run, four readings — and a way back. Every experiment walks the same path; they differ in which stages carry the weight."
         />
-        <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {WORKFLOW.map((stage, index) => (
-            <li key={stage.label}>
-              <Link
-                to={stage.to}
-                className="block h-full rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
-              >
-                <p className="text-xs font-semibold text-primary">Stage {index + 1}</p>
-                <p className="font-semibold">{stage.label}</p>
-                <p className="mt-1 text-sm text-secondary dark:text-gray-400">{stage.detail}</p>
-              </Link>
-            </li>
-          ))}
-        </ol>
+        <WorkflowDiagram />
       </section>
 
       <section className="grid gap-6 lg:grid-cols-3">

@@ -190,10 +190,19 @@ Two independent layers:
    the central live-labs service. A verified session is re-checked every 15
    minutes rather than trusted for the tab's lifetime, so revoking access takes
    effect. Configure with the `VITE_LAB_*` variables.
-2. **Workshop demo login** (`context/AuthContext.tsx`) — a `demo_user`/`demo123`
-   form. **This is not a security boundary.** Anything prefixed with `VITE_` is
-   compiled into the public bundle, and the login screen prints the credentials
-   on the page. It exists to shape the workshop flow; layer 1 is the real control.
+2. **Reviewer agreement** (`components/review/ReviewerGate.tsx`) — for accounts
+   the hub marks `isReviewer`, the NanoSchool confidentiality undertaking is
+   shown before any lab content and signing it opens the whole lab. Every other
+   account passes straight through. `lib/hub/reviewerAgreement.ts` is a
+   byte-identical copy of the document every other Live Lab displays; the
+   fingerprint is pinned in `tests/reviewerAgreement.test.ts` so this lab's copy
+   cannot fork from theirs unnoticed.
+
+The lab's own `demo_user`/`demo123` login was **removed**. It printed its
+credentials on the form that asked for them, so it was never a security
+boundary, and it stood in front of a lab layer 1 had already authorised —
+arriving from the hub dashboard meant signing in twice. `/login` now redirects
+to the dashboard so old links still land somewhere sensible.
 
 ---
 
