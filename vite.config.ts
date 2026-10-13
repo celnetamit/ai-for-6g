@@ -1,8 +1,15 @@
 import path from 'node:path';
+import { readFile, writeFile } from 'node:fs/promises';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import pkg from './package.json' with { type: 'json' };
+
+/**
+ * Identifies this build. Used for the service worker's cache names, so every
+ * deploy retires the previous shell instead of inheriting it.
+ */
+const buildStamp = `${pkg.version}-${Date.now().toString(36)}`;
 
 export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production';
@@ -18,7 +25,40 @@ export default defineConfig(({ mode }) => {
       hmr: { protocol: 'ws' },
     },
 
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      /**
+       * Stamps the service worker with this build's identity.
+       *
+       * `public/` is copied verbatim and never passes through the transform
+       * pipeline, so the worker cannot read `__APP_VERSION__` the way the
+       * application does — the token has to be substituted in the emitted file.
+       * Without it the cache names never change between deploys and the old
+       * shell is kept alive by the very code meant to retire it.
+       */
+      {
+        name: 'stamp-service-worker',
+        apply: 'build',
+        // `writeBundle` rather than `closeBundle`: it is handed the directory
+        // actually written to, so a build with `--outDir` (which the browser
+        // verification uses) is stamped as well as the default one.
+        async writeBundle(options) {
+          const directory = options.dir ?? path.resolve(__dirname, 'dist');
+          const file = path.resolve(directory, 'service-worker.js');
+          try {
+            const source = await readFile(file, 'utf8');
+            await writeFile(file, source.replaceAll('__SW_BUILD_STAMP__', buildStamp));
+            this.info(`service worker stamped ${buildStamp}`);
+          } catch (error) {
+            // A worker that cannot be stamped would ship with a cache name that
+            // never changes — the exact defect this plugin exists to remove —
+            // so fail the build rather than emit it.
+            this.error(`could not stamp the service worker: ${String(error)}`);
+          }
+        },
+      },
+    ],
 
     define: {
       // NOTE: the old config injected `process.env.API_KEY` and

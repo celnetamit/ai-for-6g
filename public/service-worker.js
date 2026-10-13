@@ -17,7 +17,24 @@
  *   - everything else → network, with a cache fallback.
  */
 
-const VERSION = 'v4';
+/*
+ * Stamped at build time by the `stamp-service-worker` plugin in vite.config.ts.
+ *
+ * It used to be a hand-written 'v4' and had never been bumped. Because the
+ * cache names are derived from it, `activate` kept finding the SAME names in
+ * its keep-set after a deploy and so deleted nothing: the previous
+ * `/index.html` survived in `ai6g-shell-v4`, pointing at asset hashes the new
+ * build no longer ships. Navigations are network-first, so an online visitor
+ * usually still got fresh HTML — but any returning visitor the fallback served,
+ * or any flaky moment, pinned them to the old application after a deploy that
+ * had in fact succeeded.
+ *
+ * Deriving it from the build means every deploy invalidates the shell
+ * automatically, which is what the constant was always for. In dev the token is
+ * left unreplaced and the worker is not registered at all.
+ */
+const STAMP = '__SW_BUILD_STAMP__';
+const VERSION = STAMP.startsWith('__SW_') ? 'dev' : STAMP;
 const SHELL_CACHE = `ai6g-shell-${VERSION}`;
 const ASSET_CACHE = `ai6g-assets-${VERSION}`;
 
